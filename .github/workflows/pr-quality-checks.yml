@@ -1,0 +1,120 @@
+# Copyright (c) 2026 shyakdas
+
+name: PR - Code Quality & Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint & Static Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Cache Gradle
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/*.toml') }}
+
+      - run: chmod +x ./gradlew
+      - run: ./gradlew ktlintCheck detekt :app:lintDebug
+
+  tests:
+    name: Unit Tests & Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Cache Gradle
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/*.toml') }}
+
+      - run: chmod +x ./gradlew
+
+      - name: Run unit tests with coverage
+        run: ./gradlew testDebugUnitTest jacocoTestReport
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: app/build/reports/jacoco/jacocoTestReport
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          files: app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+          fail_ci_if_error: false
+
+      - name: Print coverage summary
+        run: |
+          grep -A 5 "<counter type=\"INSTRUCTION\"" \
+          app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml || true
+
+  snapshots:
+    name: Snapshot Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Cache Gradle
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/*.toml') }}
+
+      - run: chmod +x ./gradlew
+
+      - name: Run snapshot tests
+        run: |
+          for attempt in 1 2 3; do
+            ./gradlew verifyPaparazziDebug && exit 0
+            if [ "$attempt" -eq 3 ]; then
+              echo "verifyPaparazziDebug failed after 3 attempts"
+              exit 1
+            fi
+            echo "verifyPaparazziDebug failed on attempt ${attempt}. Retrying in 20s..."
+            sleep 20
+          done

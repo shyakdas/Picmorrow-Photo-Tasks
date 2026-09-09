@@ -1,0 +1,3 @@
+Picmorrow helps you turn photos into simple, visual tasks so important things are easier to remember and act on.
+
+The app is being built as an open-source Android project with a clean Jetpack Compose foundation, strong CI checks, and contributor-friendly project standards.
