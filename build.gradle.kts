@@ -16,7 +16,7 @@ buildscript {
             classpath("org.bitbucket.b_c:jose4j:0.9.6")
             classpath("org.jdom:jdom2:2.0.6.1")
             classpath("org.apache.commons:commons-compress:1.28.0")
-            classpath("org.apache.commons:commons-lang3:3.17.0")
+            classpath("org.apache.commons:commons-lang3:3.20.0")
             classpath("ch.qos.logback:logback-core:1.5.18")
             classpath("io.netty:netty-codec:4.1.118.Final")
             classpath("io.netty:netty-codec-http:4.1.118.Final")
