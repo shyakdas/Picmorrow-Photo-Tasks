@@ -53,6 +53,8 @@ Expected feature boundaries as the app grows:
 - `domain`: use cases and feature models
 - `data`: repositories, local persistence, integrations
 
+See [docs/architecture.md](/Users/apple/Documents/Android-Projects/Picmorrow/docs/architecture.md) for the MVVM Clean Architecture package structure and dependency rules.
+
 ## Setup
 
 ### Requirements
