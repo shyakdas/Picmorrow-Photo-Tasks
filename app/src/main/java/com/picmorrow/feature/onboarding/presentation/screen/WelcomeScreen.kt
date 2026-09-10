@@ -123,7 +123,7 @@ private fun WelcomeCopy(
         style = MaterialTheme.typography.headlineLarge,
         color = MaterialTheme.colorScheme.onBackground,
         fontWeight = FontWeight.Black,
-        lineHeight = MaterialTheme.typography.headlineLarge.fontSize * HEADLINE_LINE_HEIGHT_RATIO,
+        lineHeight = MaterialTheme.typography.headlineLarge.lineHeight,
     )
 
     Spacer(modifier = Modifier.height(COPY_SPACING))
@@ -134,7 +134,7 @@ private fun WelcomeCopy(
             "cloud, fully local.",
         style = MaterialTheme.typography.bodyLarge,
         color = secondaryTextColor,
-        lineHeight = MaterialTheme.typography.bodyLarge.fontSize * BODY_LINE_HEIGHT_RATIO,
+        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
     )
 }
 
@@ -157,8 +157,7 @@ private fun WelcomeActions(
     ) {
         Text(
             text = "Take my first photo",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.labelLarge,
         )
     }
 
@@ -171,7 +170,7 @@ private fun WelcomeActions(
     ) {
         Text(
             text = "Explore first",
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.labelMedium,
             textDecoration = TextDecoration.Underline,
         )
     }
@@ -216,6 +215,4 @@ private val COPY_SPACING = 22.dp
 private val PRIMARY_BUTTON_HEIGHT = 48.dp
 private val SECONDARY_ACTION_TOP_SPACING = 12.dp
 private val BOTTOM_SPACING = 28.dp
-private const val HEADLINE_LINE_HEIGHT_RATIO = 1.12
-private const val BODY_LINE_HEIGHT_RATIO = 1.45
 private const val BUTTON_CORNER_PERCENT = 50
