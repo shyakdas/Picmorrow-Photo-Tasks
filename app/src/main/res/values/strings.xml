@@ -4,4 +4,14 @@
     <string name="welcome_body">Keep everyday reminders together, then clear\nthem when you\'re done. No accounts, no\ncloud, fully local.</string>
     <string name="welcome_take_first_photo">Take my first photo</string>
     <string name="welcome_explore_first">Explore first</string>
+    <string name="active_title">Active</string>
+    <string name="filter_all">All</string>
+    <string name="filter_parking">Parking</string>
+    <string name="filter_buy">Buy</string>
+    <string name="active_empty_title">Your next reminder can be a\nphoto</string>
+    <string name="active_empty_body">A parking spot, a shopping label, a collection slip.</string>
+    <string name="active_take_photo">Take photo</string>
+    <string name="active_completed_tab">Completed</string>
+    <string name="active_settings_content_description">Settings</string>
+    <string name="active_camera_content_description">Camera</string>
 </resources>

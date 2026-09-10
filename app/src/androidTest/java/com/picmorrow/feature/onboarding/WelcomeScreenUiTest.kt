@@ -5,6 +5,7 @@ import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
@@ -34,6 +35,16 @@ class WelcomeScreenUiTest {
         composeRule
             .onNodeWithText(string(R.string.welcome_explore_first))
             .assertHasClickAction()
+    }
+
+    @Test
+    fun clickingExploreFirst_opensActiveScreen() {
+        composeRule.onNodeWithText(string(R.string.welcome_explore_first)).performClick()
+        composeRule.waitForIdle()
+
+        composeRule.onNodeWithText(string(R.string.active_title)).assertIsDisplayed()
+        composeRule.onNodeWithText(string(R.string.active_empty_title)).assertIsDisplayed()
+        composeRule.onNodeWithText(string(R.string.active_take_photo)).assertIsDisplayed()
     }
 
     private fun string(@StringRes resId: Int): String = composeRule.activity.getString(resId)
