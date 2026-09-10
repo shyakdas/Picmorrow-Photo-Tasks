@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -119,7 +120,7 @@ private fun WelcomeCopy(
     secondaryTextColor: Color,
 ) {
     Text(
-        text = "Photos for things\nyou need to do.",
+        text = stringResource(R.string.welcome_title),
         style = MaterialTheme.typography.headlineLarge,
         color = MaterialTheme.colorScheme.onBackground,
         fontWeight = FontWeight.Black,
@@ -129,9 +130,7 @@ private fun WelcomeCopy(
     Spacer(modifier = Modifier.height(COPY_SPACING))
 
     Text(
-        text = "Keep everyday reminders together, then clear\n" +
-            "them when you're done. No accounts, no\n" +
-            "cloud, fully local.",
+        text = stringResource(R.string.welcome_body),
         style = MaterialTheme.typography.bodyLarge,
         color = secondaryTextColor,
         lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
@@ -156,7 +155,7 @@ private fun WelcomeActions(
         ),
     ) {
         Text(
-            text = "Take my first photo",
+            text = stringResource(R.string.welcome_take_first_photo),
             style = MaterialTheme.typography.labelLarge,
         )
     }
@@ -169,7 +168,7 @@ private fun WelcomeActions(
         colors = ButtonDefaults.textButtonColors(contentColor = secondaryTextColor),
     ) {
         Text(
-            text = "Explore first",
+            text = stringResource(R.string.welcome_explore_first),
             style = MaterialTheme.typography.labelMedium,
             textDecoration = TextDecoration.Underline,
         )
