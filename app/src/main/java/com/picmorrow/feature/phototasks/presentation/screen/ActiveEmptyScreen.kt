@@ -204,7 +204,7 @@ private fun FilterChip(
                 color = contentColor,
                 fontSize = CHIP_TEXT_SIZE,
                 lineHeight = CHIP_LINE_HEIGHT,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.SemiBold,
             )
         }
     }
@@ -312,7 +312,9 @@ private fun EmptyTakePhotoButton(
 
         Text(
             text = stringResource(R.string.active_take_photo),
-            style = MaterialTheme.typography.labelLarge,
+            fontSize = BUTTON_TEXT_SIZE,
+            lineHeight = BUTTON_LINE_HEIGHT,
+            fontWeight = FontWeight.Bold,
         )
     }
 }
@@ -361,6 +363,7 @@ private fun BottomBarItem(
     modifier: Modifier = Modifier,
 ) {
     val contentColor = if (selected) MaterialTheme.colorScheme.primary else colors.inactiveBottomItem
+    val labelWeight = if (selected) FontWeight.Bold else FontWeight.Medium
 
     Column(
         modifier = modifier,
@@ -381,7 +384,7 @@ private fun BottomBarItem(
             color = contentColor,
             fontSize = BOTTOM_BAR_LABEL_TEXT_SIZE,
             lineHeight = BOTTOM_BAR_LABEL_LINE_HEIGHT,
-            fontWeight = FontWeight.Medium,
+            fontWeight = labelWeight,
         )
     }
 }
@@ -415,14 +418,16 @@ private val FAB_END_PADDING = 22.dp
 private val FAB_BOTTOM_SPACING = 20.dp
 private val SETTINGS_BUTTON_SIZE = 44.dp
 private val SETTINGS_ICON_SIZE = 24.dp
-private val SCREEN_TITLE_TEXT_SIZE = 27.sp
+private val SCREEN_TITLE_TEXT_SIZE = 28.sp
 private val SCREEN_TITLE_LINE_HEIGHT = 34.sp
 private val CHIP_TEXT_SIZE = 14.sp
 private val CHIP_LINE_HEIGHT = 20.sp
 private val EMPTY_TITLE_TEXT_SIZE = 24.sp
 private val EMPTY_TITLE_LINE_HEIGHT = 29.sp
-private val EMPTY_BODY_TEXT_SIZE = 16.sp
-private val EMPTY_BODY_LINE_HEIGHT = 24.sp
-private val BOTTOM_BAR_LABEL_TEXT_SIZE = 12.sp
+private val EMPTY_BODY_TEXT_SIZE = 15.sp
+private val EMPTY_BODY_LINE_HEIGHT = 22.5.sp
+private val BUTTON_TEXT_SIZE = 15.sp
+private val BUTTON_LINE_HEIGHT = 20.sp
+private val BOTTOM_BAR_LABEL_TEXT_SIZE = 11.sp
 private val BOTTOM_BAR_LABEL_LINE_HEIGHT = 16.sp
 private const val BUTTON_CORNER_PERCENT = 50
