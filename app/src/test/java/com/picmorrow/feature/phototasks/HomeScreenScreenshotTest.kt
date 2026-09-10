@@ -5,10 +5,10 @@ import app.cash.paparazzi.Paparazzi
 import androidx.compose.runtime.Composable
 import org.junit.Rule
 import org.junit.Test
-import com.picmorrow.feature.phototasks.presentation.screen.ActiveEmptyScreen
+import com.picmorrow.feature.phototasks.presentation.screen.HomeScreen
 import com.picmorrow.ui.theme.PicmorrowTheme
 
-class ActiveEmptyScreenScreenshotTest {
+class HomeScreenScreenshotTest {
 
     @get:Rule
     val paparazzi = Paparazzi(deviceConfig = DeviceConfig.PIXEL_5)
@@ -16,22 +16,22 @@ class ActiveEmptyScreenScreenshotTest {
     @Test
     fun active_empty_light() {
         paparazzi.snapshot {
-            ActiveEmptySnapshotContent(darkTheme = false)
+            HomeSnapshotContent(darkTheme = false)
         }
     }
 
     @Test
     fun active_empty_dark() {
         paparazzi.snapshot {
-            ActiveEmptySnapshotContent(darkTheme = true)
+            HomeSnapshotContent(darkTheme = true)
         }
     }
 }
 
 @Composable
-private fun ActiveEmptySnapshotContent(darkTheme: Boolean) {
+private fun HomeSnapshotContent(darkTheme: Boolean) {
     PicmorrowTheme(darkTheme = darkTheme) {
-        ActiveEmptyScreen(
+        HomeScreen(
             darkTheme = darkTheme,
             onTakePhotoClick = {},
             onSettingsClick = {},

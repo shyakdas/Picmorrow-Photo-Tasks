@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import com.picmorrow.ui.theme.DarkSecondaryText
 import com.picmorrow.ui.theme.LightSecondaryText
 
-internal data class ActiveEmptyColors(
+internal data class HomeColors(
     val background: Color,
     val primaryText: Color,
     val secondaryText: Color,
@@ -22,9 +22,9 @@ internal data class ActiveEmptyColors(
     val inactiveBottomItem: Color,
 )
 
-internal fun activeEmptyColors(darkTheme: Boolean): ActiveEmptyColors =
+internal fun homeColors(darkTheme: Boolean): HomeColors =
     if (darkTheme) {
-        ActiveEmptyColors(
+        HomeColors(
             background = Color(0xFF191919),
             primaryText = Color(0xFFF8F7F5),
             secondaryText = DarkSecondaryText,
@@ -40,7 +40,7 @@ internal fun activeEmptyColors(darkTheme: Boolean): ActiveEmptyColors =
             inactiveBottomItem = Color(0xFFA09D99),
         )
     } else {
-        ActiveEmptyColors(
+        HomeColors(
             background = Color(0xFFFAF8F5),
             primaryText = Color(0xFF1C1B1A),
             secondaryText = LightSecondaryText,

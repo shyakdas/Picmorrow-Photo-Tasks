@@ -6,10 +6,10 @@ import org.junit.Test
 import com.picmorrow.ui.theme.DarkSecondaryText
 import com.picmorrow.ui.theme.LightSecondaryText
 
-class ActiveEmptyColorsTest {
+class HomeColorsTest {
     @Test
-    fun activeEmptyColors_returnsLightThemeColors() {
-        val colors = activeEmptyColors(darkTheme = false)
+    fun homeColors_returnsLightThemeColors() {
+        val colors = homeColors(darkTheme = false)
 
         assertEquals(Color(0xFFFAF8F5), colors.background)
         assertEquals(Color(0xFF1C1B1A), colors.primaryText)
@@ -20,8 +20,8 @@ class ActiveEmptyColorsTest {
     }
 
     @Test
-    fun activeEmptyColors_returnsDarkThemeColors() {
-        val colors = activeEmptyColors(darkTheme = true)
+    fun homeColors_returnsDarkThemeColors() {
+        val colors = homeColors(darkTheme = true)
 
         assertEquals(Color(0xFF191919), colors.background)
         assertEquals(Color(0xFFF8F7F5), colors.primaryText)
@@ -32,8 +32,8 @@ class ActiveEmptyColorsTest {
     }
 
     @Test
-    fun activeEmptyColors_usesPrimaryColorForSelectedDarkChip() {
-        val colors = activeEmptyColors(darkTheme = true)
+    fun homeColors_usesPrimaryColorForSelectedDarkChip() {
+        val colors = homeColors(darkTheme = true)
 
         assertEquals(Color.Transparent, colors.selectedChipBackground)
         assertEquals(Color(0xFFFF7056), colors.selectedChipBorder)

@@ -16,7 +16,7 @@ import com.picmorrow.MainActivity
 import com.picmorrow.R
 
 @RunWith(AndroidJUnit4::class)
-class ActiveEmptyScreenUiTest {
+class HomeScreenUiTest {
 
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
@@ -28,7 +28,7 @@ class ActiveEmptyScreenUiTest {
     }
 
     @Test
-    fun activeEmptyScreen_showsHeaderFiltersAndEmptyState() {
+    fun homeScreen_showsHeaderFiltersAndActiveEmptyState() {
         composeRule.onNodeWithText(string(R.string.active_title)).assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.filter_all)).assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.filter_parking)).assertIsDisplayed()
@@ -38,13 +38,13 @@ class ActiveEmptyScreenUiTest {
     }
 
     @Test
-    fun activeEmptyScreen_showsBottomNavigationItems() {
+    fun homeScreen_showsBottomNavigationItems() {
         composeRule.onNodeWithText(string(R.string.active_title)).assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.active_completed_tab)).assertIsDisplayed()
     }
 
     @Test
-    fun activeEmptyScreen_actionsAreClickable() {
+    fun homeScreen_actionsAreClickable() {
         composeRule
             .onNodeWithText(string(R.string.active_take_photo))
             .assertHasClickAction()

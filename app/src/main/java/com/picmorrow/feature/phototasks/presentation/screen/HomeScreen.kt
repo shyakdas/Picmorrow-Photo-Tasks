@@ -14,15 +14,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,84 +26,57 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.picmorrow.R
+import com.picmorrow.feature.phototasks.presentation.model.HomeContentState
+import com.picmorrow.feature.phototasks.presentation.model.HomeTab
+import com.picmorrow.ui.theme.PicmorrowTheme
 
 @Composable
-fun ActiveEmptyScreen(
+internal fun HomeScreen(
     onTakePhotoClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    contentState: HomeContentState = HomeContentState(),
 ) {
-    val colors = activeEmptyColors(darkTheme)
+    var selectedTab by rememberSaveable { mutableStateOf(HomeTab.Active) }
+    val colors = homeColors(darkTheme)
 
     Surface(
         modifier = modifier.fillMaxSize(),
         color = colors.background,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .statusBarsPadding()
-                    .padding(horizontal = SCREEN_HORIZONTAL_PADDING),
-            ) {
-                ActiveTopBar(
-                    iconTint = colors.primaryText,
-                    onSettingsClick = onSettingsClick,
-                )
-
-                Spacer(modifier = Modifier.height(FILTER_TOP_SPACING))
-
-                ActiveFilters(colors = colors)
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(bottom = BOTTOM_BAR_HEIGHT),
-                ) {
-                    ActiveEmptyState(
-                        colors = colors,
-                        onTakePhotoClick = onTakePhotoClick,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
-            }
-
-            FloatingActionButton(
-                onClick = onTakePhotoClick,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .navigationBarsPadding()
-                    .padding(
-                        end = FAB_END_PADDING,
-                        bottom = BOTTOM_BAR_HEIGHT + FAB_BOTTOM_SPACING,
-                    )
-                    .size(FAB_SIZE),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(FAB_CORNER_RADIUS),
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_fab_aperture),
-                    contentDescription = stringResource(R.string.active_camera_content_description),
-                    modifier = Modifier.size(FAB_ICON_SIZE),
-                )
-            }
-
-            ActiveBottomBar(
+            HomeContent(
+                selectedTab = selectedTab,
                 colors = colors,
+                contentState = contentState,
+                onTakePhotoClick = onTakePhotoClick,
+                onSettingsClick = onSettingsClick,
+            )
+
+            HomeCameraFab(
+                onTakePhotoClick = onTakePhotoClick,
+                modifier = Modifier.align(Alignment.BottomEnd),
+            )
+
+            HomeBottomBar(
+                selectedTab = selectedTab,
+                colors = colors,
+                onTabSelected = { selectedTab = it },
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
@@ -115,7 +84,57 @@ fun ActiveEmptyScreen(
 }
 
 @Composable
-private fun ActiveTopBar(
+private fun HomeContent(
+    selectedTab: HomeTab,
+    colors: HomeColors,
+    contentState: HomeContentState,
+    onTakePhotoClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .padding(horizontal = SCREEN_HORIZONTAL_PADDING),
+    ) {
+        HomeTopBar(
+            iconTint = colors.primaryText,
+            onSettingsClick = onSettingsClick,
+        )
+
+        Spacer(modifier = Modifier.height(FILTER_TOP_SPACING))
+
+        ActiveFilters(colors = colors)
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(bottom = BOTTOM_BAR_HEIGHT),
+        ) {
+            when (selectedTab) {
+                HomeTab.Active -> {
+                    ActiveScreen(
+                        hasPhotoTasks = contentState.hasActivePhotoTasks,
+                        colors = colors,
+                        onTakePhotoClick = onTakePhotoClick,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                HomeTab.Completed -> {
+                    CompletedScreen(
+                        hasCompletedPhotoTasks = contentState.hasCompletedPhotoTasks,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeTopBar(
     iconTint: Color,
     onSettingsClick: () -> Unit,
 ) {
@@ -147,7 +166,7 @@ private fun ActiveTopBar(
 }
 
 @Composable
-private fun ActiveFilters(colors: ActiveEmptyColors) {
+private fun ActiveFilters(colors: HomeColors) {
     Row(horizontalArrangement = Arrangement.spacedBy(FILTER_SPACING)) {
         FilterChip(
             label = stringResource(R.string.filter_all),
@@ -175,7 +194,7 @@ private fun FilterChip(
     label: String,
     @DrawableRes iconRes: Int,
     selected: Boolean,
-    colors: ActiveEmptyColors,
+    colors: HomeColors,
 ) {
     val contentColor = if (selected) colors.selectedChipContent else colors.unselectedChipContent
 
@@ -211,117 +230,36 @@ private fun FilterChip(
 }
 
 @Composable
-private fun ActiveEmptyState(
-    colors: ActiveEmptyColors,
+private fun HomeCameraFab(
     onTakePhotoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxWidth()) {
-        EmptyCameraIcon(
-            colors = colors,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .offset(y = EMPTY_CAMERA_CENTER_OFFSET),
-        )
-        EmptyCopy(
-            colors = colors,
-            modifier = Modifier.align(Alignment.Center),
-        )
-        EmptyTakePhotoButton(
-            onTakePhotoClick = onTakePhotoClick,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .offset(y = EMPTY_BUTTON_CENTER_OFFSET),
-        )
-    }
-}
-
-@Composable
-private fun EmptyCameraIcon(
-    colors: ActiveEmptyColors,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier.size(EMPTY_ICON_BACKGROUND_SIZE),
-        shape = CircleShape,
-        color = colors.emptyIconBackground,
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                painter = painterResource(R.drawable.ic_empty_camera),
-                contentDescription = null,
-                modifier = Modifier.size(EMPTY_CAMERA_ICON_SIZE),
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        }
-    }
-}
-
-@Composable
-private fun EmptyCopy(
-    colors: ActiveEmptyColors,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = stringResource(R.string.active_empty_title),
-            color = colors.primaryText,
-            fontSize = EMPTY_TITLE_TEXT_SIZE,
-            lineHeight = EMPTY_TITLE_LINE_HEIGHT,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(EMPTY_BODY_TOP_SPACING))
-
-        Text(
-            text = stringResource(R.string.active_empty_body),
-            color = colors.secondaryText,
-            fontSize = EMPTY_BODY_TEXT_SIZE,
-            lineHeight = EMPTY_BODY_LINE_HEIGHT,
-            textAlign = TextAlign.Center,
-        )
-    }
-}
-
-@Composable
-private fun EmptyTakePhotoButton(
-    onTakePhotoClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Button(
+    FloatingActionButton(
         onClick = onTakePhotoClick,
-        modifier = modifier.height(EMPTY_BUTTON_HEIGHT),
-        shape = RoundedCornerShape(percent = BUTTON_CORNER_PERCENT),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-        ),
-        contentPadding = ButtonDefaults.ContentPadding,
+        modifier = modifier
+            .navigationBarsPadding()
+            .padding(
+                end = FAB_END_PADDING,
+                bottom = BOTTOM_BAR_HEIGHT + FAB_BOTTOM_SPACING,
+            )
+            .size(FAB_SIZE),
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        shape = RoundedCornerShape(FAB_CORNER_RADIUS),
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_empty_camera),
-            contentDescription = null,
-            modifier = Modifier.size(BUTTON_ICON_SIZE),
-        )
-
-        Spacer(modifier = Modifier.width(BUTTON_ICON_SPACING))
-
-        Text(
-            text = stringResource(R.string.active_take_photo),
-            fontSize = BUTTON_TEXT_SIZE,
-            lineHeight = BUTTON_LINE_HEIGHT,
-            fontWeight = FontWeight.Bold,
+            painter = painterResource(R.drawable.ic_fab_aperture),
+            contentDescription = stringResource(R.string.active_camera_content_description),
+            modifier = Modifier.size(FAB_ICON_SIZE),
         )
     }
 }
 
 @Composable
-private fun ActiveBottomBar(
-    colors: ActiveEmptyColors,
+private fun HomeBottomBar(
+    selectedTab: HomeTab,
+    colors: HomeColors,
+    onTabSelected: (HomeTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -337,16 +275,22 @@ private fun ActiveBottomBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             BottomBarItem(
-                iconRes = R.drawable.ic_filter_grid,
-                label = stringResource(R.string.active_title),
-                selected = true,
+                item = HomeBottomBarItem(
+                    iconRes = R.drawable.ic_filter_grid,
+                    label = stringResource(R.string.active_title),
+                ),
+                selected = selectedTab == HomeTab.Active,
+                onClick = { onTabSelected(HomeTab.Active) },
                 colors = colors,
                 modifier = Modifier.weight(1f),
             )
             BottomBarItem(
-                iconRes = R.drawable.ic_bottom_check,
-                label = stringResource(R.string.active_completed_tab),
-                selected = false,
+                item = HomeBottomBarItem(
+                    iconRes = R.drawable.ic_bottom_check,
+                    label = stringResource(R.string.active_completed_tab),
+                ),
+                selected = selectedTab == HomeTab.Completed,
+                onClick = { onTabSelected(HomeTab.Completed) },
                 colors = colors,
                 modifier = Modifier.weight(1f),
             )
@@ -356,35 +300,83 @@ private fun ActiveBottomBar(
 
 @Composable
 private fun BottomBarItem(
-    @DrawableRes iconRes: Int,
-    label: String,
+    item: HomeBottomBarItem,
     selected: Boolean,
-    colors: ActiveEmptyColors,
+    onClick: () -> Unit,
+    colors: HomeColors,
     modifier: Modifier = Modifier,
 ) {
     val contentColor = if (selected) MaterialTheme.colorScheme.primary else colors.inactiveBottomItem
     val labelWeight = if (selected) FontWeight.Bold else FontWeight.Medium
 
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    Surface(
+        modifier = modifier.height(BOTTOM_BAR_HEIGHT),
+        color = Color.Transparent,
+        onClick = onClick,
     ) {
-        Icon(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(BOTTOM_BAR_ICON_SIZE),
-            tint = contentColor,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Icon(
+                painter = painterResource(item.iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(BOTTOM_BAR_ICON_SIZE),
+                tint = contentColor,
+            )
+
+            Spacer(modifier = Modifier.height(BOTTOM_BAR_LABEL_TOP_SPACING))
+
+            Text(
+                text = item.label,
+                color = contentColor,
+                fontSize = BOTTOM_BAR_LABEL_TEXT_SIZE,
+                lineHeight = BOTTOM_BAR_LABEL_LINE_HEIGHT,
+                fontWeight = labelWeight,
+            )
+        }
+    }
+}
+
+private data class HomeBottomBarItem(
+    @param:DrawableRes val iconRes: Int,
+    val label: String,
+)
+
+@Preview(
+    name = "Home Active Empty - Light",
+    showBackground = true,
+    showSystemUi = true,
+    widthDp = PHONE_PREVIEW_WIDTH,
+    heightDp = PHONE_PREVIEW_HEIGHT,
+)
+@Composable
+@Suppress("UnusedPrivateMember")
+private fun HomeActiveEmptyLightPreview() {
+    PicmorrowTheme(darkTheme = false) {
+        HomeScreen(
+            darkTheme = false,
+            onTakePhotoClick = {},
+            onSettingsClick = {},
         )
+    }
+}
 
-        Spacer(modifier = Modifier.height(BOTTOM_BAR_LABEL_TOP_SPACING))
-
-        Text(
-            text = label,
-            color = contentColor,
-            fontSize = BOTTOM_BAR_LABEL_TEXT_SIZE,
-            lineHeight = BOTTOM_BAR_LABEL_LINE_HEIGHT,
-            fontWeight = labelWeight,
+@Preview(
+    name = "Home Active Empty - Dark",
+    showBackground = true,
+    showSystemUi = true,
+    widthDp = PHONE_PREVIEW_WIDTH,
+    heightDp = PHONE_PREVIEW_HEIGHT,
+)
+@Composable
+@Suppress("UnusedPrivateMember")
+private fun HomeActiveEmptyDarkPreview() {
+    PicmorrowTheme(darkTheme = true) {
+        HomeScreen(
+            darkTheme = true,
+            onTakePhotoClick = {},
+            onSettingsClick = {},
         )
     }
 }
@@ -399,14 +391,6 @@ private val CHIP_BORDER_WIDTH = 1.dp
 private val CHIP_HORIZONTAL_PADDING = 14.dp
 private val CHIP_ICON_SIZE = 14.dp
 private val CHIP_ICON_SPACING = 6.dp
-private val EMPTY_ICON_BACKGROUND_SIZE = 100.dp
-private val EMPTY_CAMERA_ICON_SIZE = 36.dp
-private val EMPTY_BODY_TOP_SPACING = 14.dp
-private val EMPTY_CAMERA_CENTER_OFFSET = (-118).dp
-private val EMPTY_BUTTON_CENTER_OFFSET = 116.dp
-private val EMPTY_BUTTON_HEIGHT = 46.dp
-private val BUTTON_ICON_SIZE = 18.dp
-private val BUTTON_ICON_SPACING = 6.dp
 private val BOTTOM_BAR_HEIGHT = 72.dp
 private val BOTTOM_BAR_BORDER_WIDTH = 1.dp
 private val BOTTOM_BAR_ICON_SIZE = 22.dp
@@ -422,12 +406,7 @@ private val SCREEN_TITLE_TEXT_SIZE = 28.sp
 private val SCREEN_TITLE_LINE_HEIGHT = 34.sp
 private val CHIP_TEXT_SIZE = 14.sp
 private val CHIP_LINE_HEIGHT = 20.sp
-private val EMPTY_TITLE_TEXT_SIZE = 24.sp
-private val EMPTY_TITLE_LINE_HEIGHT = 29.sp
-private val EMPTY_BODY_TEXT_SIZE = 15.sp
-private val EMPTY_BODY_LINE_HEIGHT = 22.5.sp
-private val BUTTON_TEXT_SIZE = 15.sp
-private val BUTTON_LINE_HEIGHT = 20.sp
 private val BOTTOM_BAR_LABEL_TEXT_SIZE = 11.sp
 private val BOTTOM_BAR_LABEL_LINE_HEIGHT = 16.sp
-private const val BUTTON_CORNER_PERCENT = 50
+private const val PHONE_PREVIEW_WIDTH = 411
+private const val PHONE_PREVIEW_HEIGHT = 891

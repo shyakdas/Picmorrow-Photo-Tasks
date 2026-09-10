@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.picmorrow.feature.onboarding.presentation.screen.WelcomeScreen
-import com.picmorrow.feature.phototasks.presentation.screen.ActiveEmptyScreen
+import com.picmorrow.feature.phototasks.presentation.screen.HomeScreen
 import com.picmorrow.ui.theme.PicmorrowTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     AppScreen.Active -> {
-                        ActiveEmptyScreen(
+                        HomeScreen(
                             onTakePhotoClick = {},
                             onSettingsClick = {},
                         )
