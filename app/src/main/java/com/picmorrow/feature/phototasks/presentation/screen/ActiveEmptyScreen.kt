@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -70,11 +71,18 @@ fun ActiveEmptyScreen(
 
                 ActiveFilters(colors = colors)
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                ActiveEmptyState(colors = colors, onTakePhotoClick = onTakePhotoClick)
-
-                Spacer(modifier = Modifier.weight(1f))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(bottom = BOTTOM_BAR_HEIGHT),
+                ) {
+                    ActiveEmptyState(
+                        colors = colors,
+                        onTakePhotoClick = onTakePhotoClick,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
 
             FloatingActionButton(
@@ -206,25 +214,35 @@ private fun FilterChip(
 private fun ActiveEmptyState(
     colors: ActiveEmptyColors,
     onTakePhotoClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        EmptyCameraIcon(colors = colors)
-
-        Spacer(modifier = Modifier.height(EMPTY_TITLE_TOP_SPACING))
-
-        EmptyCopy(colors = colors)
-
-        EmptyTakePhotoButton(onTakePhotoClick = onTakePhotoClick)
+    Box(modifier = modifier.fillMaxWidth()) {
+        EmptyCameraIcon(
+            colors = colors,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = EMPTY_CAMERA_CENTER_OFFSET),
+        )
+        EmptyCopy(
+            colors = colors,
+            modifier = Modifier.align(Alignment.Center),
+        )
+        EmptyTakePhotoButton(
+            onTakePhotoClick = onTakePhotoClick,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = EMPTY_BUTTON_CENTER_OFFSET),
+        )
     }
 }
 
 @Composable
-private fun EmptyCameraIcon(colors: ActiveEmptyColors) {
+private fun EmptyCameraIcon(
+    colors: ActiveEmptyColors,
+    modifier: Modifier = Modifier,
+) {
     Surface(
-        modifier = Modifier.size(EMPTY_ICON_BACKGROUND_SIZE),
+        modifier = modifier.size(EMPTY_ICON_BACKGROUND_SIZE),
         shape = CircleShape,
         color = colors.emptyIconBackground,
     ) {
@@ -240,34 +258,43 @@ private fun EmptyCameraIcon(colors: ActiveEmptyColors) {
 }
 
 @Composable
-private fun EmptyCopy(colors: ActiveEmptyColors) {
-    Text(
-        text = stringResource(R.string.active_empty_title),
-        color = colors.primaryText,
-        fontSize = EMPTY_TITLE_TEXT_SIZE,
-        lineHeight = EMPTY_TITLE_LINE_HEIGHT,
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center,
-    )
+private fun EmptyCopy(
+    colors: ActiveEmptyColors,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = stringResource(R.string.active_empty_title),
+            color = colors.primaryText,
+            fontSize = EMPTY_TITLE_TEXT_SIZE,
+            lineHeight = EMPTY_TITLE_LINE_HEIGHT,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+        )
 
-    Spacer(modifier = Modifier.height(EMPTY_BODY_TOP_SPACING))
+        Spacer(modifier = Modifier.height(EMPTY_BODY_TOP_SPACING))
 
-    Text(
-        text = stringResource(R.string.active_empty_body),
-        color = colors.secondaryText,
-        fontSize = EMPTY_BODY_TEXT_SIZE,
-        lineHeight = EMPTY_BODY_LINE_HEIGHT,
-        textAlign = TextAlign.Center,
-    )
+        Text(
+            text = stringResource(R.string.active_empty_body),
+            color = colors.secondaryText,
+            fontSize = EMPTY_BODY_TEXT_SIZE,
+            lineHeight = EMPTY_BODY_LINE_HEIGHT,
+            textAlign = TextAlign.Center,
+        )
+    }
 }
 
 @Composable
-private fun EmptyTakePhotoButton(onTakePhotoClick: () -> Unit) {
-    Spacer(modifier = Modifier.height(EMPTY_BUTTON_TOP_SPACING))
-
+private fun EmptyTakePhotoButton(
+    onTakePhotoClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Button(
         onClick = onTakePhotoClick,
-        modifier = Modifier.height(EMPTY_BUTTON_HEIGHT),
+        modifier = modifier.height(EMPTY_BUTTON_HEIGHT),
         shape = RoundedCornerShape(percent = BUTTON_CORNER_PERCENT),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -360,7 +387,7 @@ private fun BottomBarItem(
 }
 
 private val SCREEN_HORIZONTAL_PADDING = 20.dp
-private val TOP_BAR_TOP_PADDING = 28.dp
+private val TOP_BAR_TOP_PADDING = 20.dp
 private val FILTER_TOP_SPACING = 20.dp
 private val FILTER_SPACING = 8.dp
 private val CHIP_HEIGHT = 40.dp
@@ -371,9 +398,9 @@ private val CHIP_ICON_SIZE = 14.dp
 private val CHIP_ICON_SPACING = 6.dp
 private val EMPTY_ICON_BACKGROUND_SIZE = 100.dp
 private val EMPTY_CAMERA_ICON_SIZE = 36.dp
-private val EMPTY_TITLE_TOP_SPACING = 24.dp
 private val EMPTY_BODY_TOP_SPACING = 14.dp
-private val EMPTY_BUTTON_TOP_SPACING = 26.dp
+private val EMPTY_CAMERA_CENTER_OFFSET = (-118).dp
+private val EMPTY_BUTTON_CENTER_OFFSET = 116.dp
 private val EMPTY_BUTTON_HEIGHT = 46.dp
 private val BUTTON_ICON_SIZE = 18.dp
 private val BUTTON_ICON_SPACING = 6.dp
