@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.picmorrow.feature.onboarding.presentation.screen.WelcomeScreen
+import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
 import com.picmorrow.feature.phototasks.presentation.screen.HomeScreen
 
 @Composable
@@ -21,7 +21,7 @@ fun PicmorrowNavHost(
         modifier = modifier,
     ) {
         composable(AppDestination.Welcome.route) {
-            WelcomeScreen(
+            WelcomeRoute(
                 onTakeFirstPhotoClick = {},
                 onExploreFirstClick = {
                     navController.navigate(AppDestination.Home.route) {
