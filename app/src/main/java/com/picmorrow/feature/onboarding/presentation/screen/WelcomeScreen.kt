@@ -32,8 +32,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.picmorrow.R
-import com.picmorrow.ui.theme.DarkSecondaryText
-import com.picmorrow.ui.theme.LightSecondaryText
 import com.picmorrow.ui.theme.PicmorrowTheme
 
 @Composable
@@ -43,16 +41,9 @@ fun WelcomeScreen(
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
 ) {
-    val heroRes =
-        if (darkTheme) {
-            R.drawable.onboarding_hero_dark
-        } else {
-            R.drawable.onboarding_hero_light
-        }
-
     WelcomeScreenContent(
-        heroRes = heroRes,
-        secondaryTextColor = if (darkTheme) DarkSecondaryText else LightSecondaryText,
+        heroRes = WelcomeThemeAssets.heroRes(darkTheme),
+        secondaryTextColor = WelcomeThemeAssets.secondaryTextColor(darkTheme),
         onTakeFirstPhotoClick = onTakeFirstPhotoClick,
         onExploreFirstClick = onExploreFirstClick,
         modifier = modifier,
@@ -183,8 +174,8 @@ private fun WelcomeActions(
 private fun WelcomeScreenLightPreview() {
     PicmorrowTheme(darkTheme = false) {
         WelcomeScreenContent(
-            heroRes = R.drawable.onboarding_hero_light,
-            secondaryTextColor = LightSecondaryText,
+            heroRes = WelcomeThemeAssets.heroRes(darkTheme = false),
+            secondaryTextColor = WelcomeThemeAssets.secondaryTextColor(darkTheme = false),
             onTakeFirstPhotoClick = {},
             onExploreFirstClick = {},
         )
@@ -197,8 +188,8 @@ private fun WelcomeScreenLightPreview() {
 private fun WelcomeScreenDarkPreview() {
     PicmorrowTheme(darkTheme = true) {
         WelcomeScreenContent(
-            heroRes = R.drawable.onboarding_hero_dark,
-            secondaryTextColor = DarkSecondaryText,
+            heroRes = WelcomeThemeAssets.heroRes(darkTheme = true),
+            secondaryTextColor = WelcomeThemeAssets.secondaryTextColor(darkTheme = true),
             onTakeFirstPhotoClick = {},
             onExploreFirstClick = {},
         )
