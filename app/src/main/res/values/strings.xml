@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Picmorrow</string>
+    <string name="welcome_title">Photos for things\nyou need to do.</string>
+    <string name="welcome_body">Keep everyday reminders together, then clear\nthem when you\'re done. No accounts, no\ncloud, fully local.</string>
+    <string name="welcome_take_first_photo">Take my first photo</string>
+    <string name="welcome_explore_first">Explore first</string>
 </resources>
