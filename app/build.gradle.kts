@@ -88,6 +88,9 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             "**/*Test*.*",
             "**/MainActivity*.*",
             "**/ComposableSingletons*.*",
+            "**/core/common/PermissionExtensions*.*",
+            "**/navigation/PicmorrowNavHost*.*",
+            "**/presentation/components/**",
             "**/presentation/screen/**",
             "**/ui/theme/**",
         )
