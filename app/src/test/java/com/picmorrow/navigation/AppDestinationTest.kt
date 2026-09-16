@@ -8,5 +8,6 @@ class AppDestinationTest {
     fun routes_areCorrect() {
         assertEquals("welcome", AppDestination.Welcome.route)
         assertEquals("home", AppDestination.Home.route)
+        assertEquals("camera", AppDestination.Camera.route)
     }
 }
