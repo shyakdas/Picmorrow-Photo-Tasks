@@ -7,8 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.picmorrow.R
-import com.picmorrow.feature.phototasks.presentation.model.PhotoTaskEmptyStateConfig
 import com.picmorrow.feature.phototasks.presentation.screen.homeColors
 import com.picmorrow.ui.theme.PicmorrowTheme
 
@@ -49,15 +47,7 @@ private fun PhotoTaskEmptyStatePreviewContent(darkTheme: Boolean) {
         color = colors.background,
     ) {
         PhotoTaskEmptyState(
-            config = PhotoTaskEmptyStateConfig(
-                titleRes = R.string.active_empty_title,
-                bodyRes = R.string.active_empty_body,
-                actionRes = R.string.active_take_photo,
-                iconRes = R.drawable.ic_empty_camera,
-                iconBackgroundColor = colors.emptyIconBackground,
-                primaryTextColor = colors.primaryText,
-                secondaryTextColor = colors.secondaryText,
-            ),
+            config = previewEmptyStateConfig(darkTheme),
             onActionClick = {},
             modifier = Modifier
                 .fillMaxSize()

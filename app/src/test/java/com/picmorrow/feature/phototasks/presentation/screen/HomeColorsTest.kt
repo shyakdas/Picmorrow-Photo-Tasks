@@ -1,42 +1,52 @@
 package com.picmorrow.feature.phototasks.presentation.screen
 
-import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import com.picmorrow.ui.theme.DarkBackground
+import com.picmorrow.ui.theme.DarkCoral
+import com.picmorrow.ui.theme.DarkEmptyIconBackground
+import com.picmorrow.ui.theme.DarkNavigationBarBorder
 import com.picmorrow.ui.theme.DarkSecondaryText
+import com.picmorrow.ui.theme.DarkSurfaceRaised
+import com.picmorrow.ui.theme.DarkText
+import com.picmorrow.ui.theme.LightBackground
+import com.picmorrow.ui.theme.LightEmptyIconBackground
+import com.picmorrow.ui.theme.LightNavigationBar
+import com.picmorrow.ui.theme.LightNavigationBarBorder
 import com.picmorrow.ui.theme.LightSecondaryText
+import com.picmorrow.ui.theme.LightText
 
 class HomeColorsTest {
     @Test
     fun homeColors_returnsLightThemeColors() {
         val colors = homeColors(darkTheme = false)
 
-        assertEquals(Color(0xFFFAF8F5), colors.background)
-        assertEquals(Color(0xFF1C1B1A), colors.primaryText)
+        assertEquals(LightBackground, colors.background)
+        assertEquals(LightText, colors.primaryText)
         assertEquals(LightSecondaryText, colors.secondaryText)
-        assertEquals(Color(0xFFFFE7E1), colors.emptyIconBackground)
-        assertEquals(Color.White, colors.unselectedChipBackground)
-        assertEquals(Color(0xFFE2DFDC), colors.bottomBarBorder)
+        assertEquals(LightEmptyIconBackground, colors.emptyIconBackground)
+        assertEquals(LightNavigationBar, colors.unselectedChipBackground)
+        assertEquals(LightNavigationBarBorder, colors.bottomBarBorder)
     }
 
     @Test
     fun homeColors_returnsDarkThemeColors() {
         val colors = homeColors(darkTheme = true)
 
-        assertEquals(Color(0xFF191919), colors.background)
-        assertEquals(Color(0xFFF8F7F5), colors.primaryText)
+        assertEquals(DarkBackground, colors.background)
+        assertEquals(DarkText, colors.primaryText)
         assertEquals(DarkSecondaryText, colors.secondaryText)
-        assertEquals(Color(0xFF39211D), colors.emptyIconBackground)
-        assertEquals(Color(0xFF252525), colors.unselectedChipBackground)
-        assertEquals(Color(0xFF343332), colors.bottomBarBorder)
+        assertEquals(DarkEmptyIconBackground, colors.emptyIconBackground)
+        assertEquals(DarkSurfaceRaised, colors.unselectedChipBackground)
+        assertEquals(DarkNavigationBarBorder, colors.bottomBarBorder)
     }
 
     @Test
     fun homeColors_usesPrimaryColorForSelectedDarkChip() {
         val colors = homeColors(darkTheme = true)
 
-        assertEquals(Color.Transparent, colors.selectedChipBackground)
-        assertEquals(Color(0xFFFF7056), colors.selectedChipBorder)
-        assertEquals(Color(0xFFFF7056), colors.selectedChipContent)
+        assertEquals(androidx.compose.ui.graphics.Color.Transparent, colors.selectedChipBackground)
+        assertEquals(DarkCoral, colors.selectedChipBorder)
+        assertEquals(DarkCoral, colors.selectedChipContent)
     }
 }
