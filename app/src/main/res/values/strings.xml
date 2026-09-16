@@ -14,4 +14,17 @@
     <string name="active_completed_tab">Completed</string>
     <string name="active_settings_content_description">Settings</string>
     <string name="active_camera_content_description">Camera</string>
+    <string name="camera_close_content_description">Close camera</string>
+    <string name="camera_flash_on_content_description">Flash on</string>
+    <string name="camera_flash_off_content_description">Flash off</string>
+    <string name="camera_capture_content_description">Capture photo</string>
+    <string name="camera_permission_title">Camera access is needed</string>
+    <string name="camera_permission_body">Picmorrow uses the camera to make photo reminders.</string>
+    <string name="camera_permission_action">Allow camera access</string>
+    <string name="camera_photo_saved">Photo saved</string>
+    <string name="camera_photo_failed">Could not save photo</string>
+    <string name="camera_category_parking">Parking</string>
+    <string name="camera_category_buy">Buy</string>
+    <string name="camera_category_collect">Collect</string>
+    <string name="camera_category_remember">Remember</string>
 </resources>
