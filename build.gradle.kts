@@ -18,10 +18,10 @@ buildscript {
             classpath("org.apache.commons:commons-compress:1.28.0")
             classpath("org.apache.commons:commons-lang3:3.17.0")
             classpath("ch.qos.logback:logback-core:1.5.18")
-            classpath("io.netty:netty-codec:4.1.118.Final")
-            classpath("io.netty:netty-codec-http:4.1.118.Final")
-            classpath("io.netty:netty-codec-http2:4.1.118.Final")
-            classpath("io.netty:netty-handler:4.1.118.Final")
+            classpath("io.netty:netty-codec:4.2.18.Final")
+            classpath("io.netty:netty-codec-http:4.2.18.Final")
+            classpath("io.netty:netty-codec-http2:4.2.18.Final")
+            classpath("io.netty:netty-handler:4.2.18.Final")
         }
     }
 }
