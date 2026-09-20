@@ -158,7 +158,7 @@ internal fun NewPhotoTaskScreen(
             },
             onChooseCustom = {
                 showReminderSheet = false
-                showReminderDateTimePicker(context, darkTheme, reminderAtMillis) { reminderAtMillis = it }
+                showReminderDateTimePicker(context, reminderAtMillis) { reminderAtMillis = it }
             },
             onRemove = {
                 reminderAtMillis = null

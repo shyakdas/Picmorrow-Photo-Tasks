@@ -11,11 +11,11 @@ class CameraViewModelTest {
     private val viewModel = CameraViewModel()
 
     @Test
-    fun uiState_defaultsToRememberCategoryAndFlashOff() {
+    fun uiState_defaultsToParkingCategoryAndFlashOff() {
         val uiState = viewModel.uiState.value
 
         assertFalse(uiState.contentUiState.flashEnabled)
-        assertEquals(CameraCategory.Remember, uiState.contentUiState.selectedCategory)
+        assertEquals(CameraCategory.Parking, uiState.contentUiState.selectedCategory)
         assertEquals(null, uiState.captureStatusRes)
     }
 
@@ -32,9 +32,9 @@ class CameraViewModelTest {
 
     @Test
     fun selectCategory_updatesSelectedCategory() {
-        viewModel.selectCategory(CameraCategory.Parking)
+        viewModel.selectCategory(CameraCategory.Remember)
 
-        assertEquals(CameraCategory.Parking, viewModel.uiState.value.contentUiState.selectedCategory)
+        assertEquals(CameraCategory.Remember, viewModel.uiState.value.contentUiState.selectedCategory)
     }
 
     @Test

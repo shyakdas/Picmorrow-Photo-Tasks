@@ -93,7 +93,7 @@ private fun NavGraphBuilder.newPhotoTaskDestination(navController: NavHostContro
             backStackEntry.arguments
                 ?.getString(AppDestination.NewPhotoTask.CategoryArg)
                 ?.let { runCatching { CameraCategory.valueOf(it) }.getOrNull() }
-                ?: CameraCategory.Remember
+                ?: CameraCategory.Parking
 
         NewPhotoTaskScreen(
             photoPath = photoPath,
