@@ -1,14 +1,20 @@
 package com.picmorrow.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.picmorrow.feature.camera.presentation.model.CameraCategory
 import com.picmorrow.feature.camera.presentation.screen.CameraRoute
 import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
 import com.picmorrow.feature.phototasks.presentation.screen.HomeScreen
+import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskScreen
 
 @Composable
 fun PicmorrowNavHost(
@@ -50,7 +56,55 @@ fun PicmorrowNavHost(
                 onCloseClick = {
                     navController.navigateUp()
                 },
+                onPhotoCaptured = { photoUri, category ->
+                    navController.navigate(
+                        AppDestination.NewPhotoTask.route(
+                            photoPath = photoUri.path.orEmpty(),
+                            categoryName = category.name,
+                        ),
+                    )
+                },
             )
         }
+
+        newPhotoTaskDestination(navController)
+    }
+}
+
+private fun NavGraphBuilder.newPhotoTaskDestination(navController: NavHostController) {
+    composable(
+        route = AppDestination.NewPhotoTask.route,
+        arguments = listOf(
+            navArgument(AppDestination.NewPhotoTask.PhotoPathArg) {
+                type = NavType.StringType
+            },
+            navArgument(AppDestination.NewPhotoTask.CategoryArg) {
+                type = NavType.StringType
+            },
+        ),
+    ) { backStackEntry ->
+        val photoPath =
+            Uri.decode(
+                backStackEntry.arguments
+                    ?.getString(AppDestination.NewPhotoTask.PhotoPathArg)
+                    .orEmpty(),
+            )
+        val category =
+            backStackEntry.arguments
+                ?.getString(AppDestination.NewPhotoTask.CategoryArg)
+                ?.let { runCatching { CameraCategory.valueOf(it) }.getOrNull() }
+                ?: CameraCategory.Remember
+
+        NewPhotoTaskScreen(
+            photoPath = photoPath,
+            selectedCategory = category,
+            onCancelClick = {
+                navController.navigateUp()
+            },
+            onRetakeClick = {
+                navController.navigateUp()
+            },
+            onSaveClick = {},
+        )
     }
 }

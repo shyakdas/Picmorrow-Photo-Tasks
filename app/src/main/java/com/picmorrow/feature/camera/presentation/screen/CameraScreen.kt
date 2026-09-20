@@ -35,11 +35,13 @@ import com.picmorrow.feature.camera.presentation.CameraViewModel
 import com.picmorrow.feature.camera.presentation.components.CameraBackground
 import com.picmorrow.feature.camera.presentation.components.CameraContent
 import com.picmorrow.feature.camera.presentation.components.CameraTopBar
+import com.picmorrow.feature.camera.presentation.model.CameraCategory
 import java.io.File
 
 @Composable
 internal fun CameraScreen(
     onCloseClick: () -> Unit,
+    onPhotoCaptured: (Uri, CameraCategory) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CameraViewModel = viewModel(),
 ) {
@@ -68,11 +70,13 @@ internal fun CameraScreen(
             uiState = uiState.contentUiState,
             onCategorySelected = viewModel::selectCategory,
             onCaptureClick = {
+                val capturedCategory = uiState.contentUiState.selectedCategory
                 capturePhoto(
                     context = context,
                     imageCapture = imageCapture,
                     onCaptureComplete = {
                         viewModel.onPhotoCaptured()
+                        onPhotoCaptured(it, capturedCategory)
                     },
                     onCaptureError = {
                         viewModel.onPhotoCaptureFailed()
@@ -176,7 +180,10 @@ private fun capturePhoto(
     onCaptureComplete: (Uri) -> Unit,
     onCaptureError: (ImageCaptureException) -> Unit,
 ) {
-    val outputFile = File(context.filesDir, "picmorrow-${System.currentTimeMillis()}.jpg")
+    val photoDirectory = File(context.filesDir, PHOTO_DIRECTORY_NAME).apply {
+        mkdirs()
+    }
+    val outputFile = File(photoDirectory, "picmorrow-${System.currentTimeMillis()}.jpg")
     val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
 
     imageCapture.takePicture(
@@ -193,3 +200,5 @@ private fun capturePhoto(
         },
     )
 }
+
+private const val PHOTO_DIRECTORY_NAME = "photos"
