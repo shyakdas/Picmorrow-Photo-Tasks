@@ -3,6 +3,14 @@
 
     <style name="Theme.Picmorrow" parent="android:Theme.Material.Light.NoActionBar" />
 
+    <style name="Theme.Picmorrow.ReminderPicker.Light" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/brand_coral</item>
+    </style>
+
+    <style name="Theme.Picmorrow.ReminderPicker.Dark" parent="android:Theme.Material.Dialog.Alert">
+        <item name="android:colorAccent">@color/brand_coral_dark</item>
+    </style>
+
     <style name="Theme.Picmorrow.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>

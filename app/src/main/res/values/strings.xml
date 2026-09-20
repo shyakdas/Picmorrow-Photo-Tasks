@@ -27,4 +27,24 @@
     <string name="camera_category_buy">Buy</string>
     <string name="camera_category_collect">Collect</string>
     <string name="camera_category_remember">Remember</string>
+    <string name="new_photo_task_title">New Photo-Task</string>
+    <string name="new_photo_task_cancel">Cancel</string>
+    <string name="new_photo_task_retake">Retake</string>
+    <string name="new_photo_task_photo_content_description">Captured photo</string>
+    <string name="new_photo_task_category_label">Category</string>
+    <string name="new_photo_task_title_label">Title</string>
+    <string name="new_photo_task_title_placeholder">What needs to be done?</string>
+    <string name="new_photo_task_notes_label">Notes (optional)</string>
+    <string name="new_photo_task_notes_placeholder">Add details, sizes, or codes&#8230;</string>
+    <string name="new_photo_task_character_count">%1$d / %2$d</string>
+    <string name="new_photo_task_set_reminder">Set a reminder</string>
+    <string name="reminder_sheet_title">Set reminder</string>
+    <string name="reminder_in_one_hour">In 1 hour</string>
+    <string name="reminder_this_evening">This evening</string>
+    <string name="reminder_tomorrow_evening">Tomorrow evening</string>
+    <string name="reminder_tomorrow_morning">Tomorrow morning</string>
+    <string name="reminder_choose_date_time">Choose date &amp; time</string>
+    <string name="reminder_remove">Remove reminder</string>
+    <string name="reminder_choose_future_time">Choose a future time</string>
+    <string name="new_photo_task_save">Save task</string>
 </resources>
