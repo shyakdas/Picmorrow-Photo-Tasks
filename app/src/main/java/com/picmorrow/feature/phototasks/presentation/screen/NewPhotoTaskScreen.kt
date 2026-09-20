@@ -113,6 +113,7 @@ internal fun NewPhotoTaskScreen(
                     onValueChange = { title = it },
                     placeholder = stringResource(R.string.new_photo_task_title_placeholder),
                     minHeight = TITLE_INPUT_HEIGHT,
+                    maxLength = TITLE_MAX_LENGTH,
                     colors = colors,
                 )
 
@@ -124,6 +125,7 @@ internal fun NewPhotoTaskScreen(
                     onValueChange = { notes = it },
                     placeholder = stringResource(R.string.new_photo_task_notes_placeholder),
                     minHeight = NOTES_INPUT_HEIGHT,
+                    maxLength = NOTES_MAX_LENGTH,
                     colors = colors,
                     singleLine = false,
                 )
@@ -210,3 +212,5 @@ private val REMINDER_TOP_SPACING = 20.dp
 private val BOTTOM_SPACING = 22.dp
 private val TITLE_INPUT_HEIGHT = 52.dp
 private val NOTES_INPUT_HEIGHT = 80.dp
+private const val TITLE_MAX_LENGTH = 60
+private const val NOTES_MAX_LENGTH = 200
