@@ -23,16 +23,18 @@ import com.picmorrow.ui.theme.Coral
 internal fun SaveTaskButton(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isSaving: Boolean = false,
 ) {
     Surface(
         onClick = onSaveClick,
+        enabled = !isSaving,
         modifier = modifier.height(SAVE_BUTTON_HEIGHT),
         shape = RoundedCornerShape(SAVE_BUTTON_CORNER_RADIUS),
         color = Coral,
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
-                text = stringResource(R.string.new_photo_task_save),
+                text = stringResource(if (isSaving) R.string.new_photo_task_saving else R.string.new_photo_task_save),
                 color = Color.White,
                 fontSize = SAVE_BUTTON_TEXT_SIZE,
                 lineHeight = SAVE_BUTTON_LINE_HEIGHT,

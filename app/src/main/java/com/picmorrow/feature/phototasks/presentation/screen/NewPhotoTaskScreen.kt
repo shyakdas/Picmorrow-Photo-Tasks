@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.picmorrow.R
 import com.picmorrow.feature.camera.presentation.model.CameraCategory
 import com.picmorrow.feature.phototasks.presentation.components.CapturedPhotoCard
@@ -37,6 +39,8 @@ import com.picmorrow.feature.phototasks.presentation.components.ReminderBottomSh
 import com.picmorrow.feature.phototasks.presentation.components.ReminderRow
 import com.picmorrow.feature.phototasks.presentation.components.SaveTaskButton
 import com.picmorrow.feature.phototasks.presentation.components.showReminderDateTimePicker
+import com.picmorrow.feature.phototasks.domain.model.PhotoTaskDraft
+import com.picmorrow.feature.phototasks.presentation.model.PhotoTaskSaveUiState
 import com.picmorrow.ui.theme.PicmorrowTheme
 
 @Suppress("LongMethod", "LongParameterList")
@@ -46,9 +50,11 @@ internal fun NewPhotoTaskScreen(
     selectedCategory: CameraCategory,
     onCancelClick: () -> Unit,
     onRetakeClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onSaveClick: (PhotoTaskDraft) -> Unit,
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    saveState: PhotoTaskSaveUiState = PhotoTaskSaveUiState(),
+    onFormChanged: () -> Unit = {},
 ) {
     val colors = newPhotoTaskColors(darkTheme)
     val context = LocalContext.current
@@ -102,7 +108,10 @@ internal fun NewPhotoTaskScreen(
                 CategorySelector(
                     selectedCategory = currentCategory,
                     colors = colors,
-                    onCategorySelected = { currentCategory = it },
+                    onCategorySelected = {
+                        currentCategory = it
+                        onFormChanged()
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(FIELD_TOP_SPACING))
@@ -110,7 +119,10 @@ internal fun NewPhotoTaskScreen(
                 LabeledInput(
                     label = stringResource(R.string.new_photo_task_title_label),
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = {
+                        title = it
+                        onFormChanged()
+                    },
                     placeholder = stringResource(R.string.new_photo_task_title_placeholder),
                     minHeight = TITLE_INPUT_HEIGHT,
                     maxLength = TITLE_MAX_LENGTH,
@@ -122,7 +134,10 @@ internal fun NewPhotoTaskScreen(
                 LabeledInput(
                     label = stringResource(R.string.new_photo_task_notes_label),
                     value = notes,
-                    onValueChange = { notes = it },
+                    onValueChange = {
+                        notes = it
+                        onFormChanged()
+                    },
                     placeholder = stringResource(R.string.new_photo_task_notes_placeholder),
                     minHeight = NOTES_INPUT_HEIGHT,
                     maxLength = NOTES_MAX_LENGTH,
@@ -141,8 +156,28 @@ internal fun NewPhotoTaskScreen(
                 Spacer(modifier = Modifier.height(BOTTOM_SPACING))
             }
 
+            saveState.errorMessageRes?.let { messageRes ->
+                Text(
+                    text = stringResource(messageRes),
+                    color = colors.limitReached,
+                    fontSize = SAVE_ERROR_TEXT_SIZE,
+                    modifier = Modifier.padding(bottom = SAVE_ERROR_BOTTOM_SPACING),
+                )
+            }
+
             SaveTaskButton(
-                onSaveClick = onSaveClick,
+                onSaveClick = {
+                    onSaveClick(
+                        PhotoTaskDraft(
+                            photoPath = photoPath,
+                            category = currentCategory.name,
+                            title = title,
+                            notes = notes,
+                            reminderAtMillis = reminderAtMillis,
+                        ),
+                    )
+                },
+                isSaving = saveState.isSaving,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -156,14 +191,19 @@ internal fun NewPhotoTaskScreen(
             onDismiss = { showReminderSheet = false },
             onPresetSelected = { reminderTime ->
                 reminderAtMillis = reminderTime.toInstant().toEpochMilli()
+                onFormChanged()
                 showReminderSheet = false
             },
             onChooseCustom = {
                 showReminderSheet = false
-                showReminderDateTimePicker(context, reminderAtMillis) { reminderAtMillis = it }
+                showReminderDateTimePicker(context, reminderAtMillis) {
+                    reminderAtMillis = it
+                    onFormChanged()
+                }
             },
             onRemove = {
                 reminderAtMillis = null
+                onFormChanged()
                 showReminderSheet = false
             },
         )
@@ -214,3 +254,5 @@ private val TITLE_INPUT_HEIGHT = 52.dp
 private val NOTES_INPUT_HEIGHT = 80.dp
 private const val TITLE_MAX_LENGTH = 60
 private const val NOTES_MAX_LENGTH = 200
+private val SAVE_ERROR_TEXT_SIZE = 13.sp
+private val SAVE_ERROR_BOTTOM_SPACING = 8.dp
