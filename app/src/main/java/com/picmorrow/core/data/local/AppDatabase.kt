@@ -12,16 +12,14 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun photoTaskDao(): PhotoTaskDao
 
     companion object {
-        @Volatile
         private var instance: AppDatabase? = null
 
+        @Synchronized
         fun getInstance(context: Context): AppDatabase =
-            instance ?: synchronized(this) {
-                instance ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "picmorrow.db",
-                ).build().also { instance = it }
-            }
+            instance ?: Room.databaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java,
+                "picmorrow.db",
+            ).build().also { instance = it }
     }
 }

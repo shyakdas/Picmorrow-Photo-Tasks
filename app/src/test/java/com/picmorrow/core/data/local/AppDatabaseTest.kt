@@ -12,7 +12,7 @@ class AppDatabaseTest {
     fun getInstanceBuildsOneDatabaseWithApplicationContext() {
         val context = Mockito.mock(Context::class.java)
         val applicationContext = Mockito.mock(Context::class.java)
-        val database = Mockito.mock(AppDatabase::class.java)
+        val database = Mockito.mock(AppDatabase::class.java, Mockito.withSettings().useConstructor())
         @Suppress("UNCHECKED_CAST")
         val builder = Mockito.mock(RoomDatabase.Builder::class.java) as RoomDatabase.Builder<AppDatabase>
         Mockito.`when`(context.applicationContext).thenReturn(applicationContext)
