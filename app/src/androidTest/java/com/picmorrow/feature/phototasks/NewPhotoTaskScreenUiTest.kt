@@ -13,10 +13,13 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.domain.model.PhotoTaskDraft
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskScreen
 import com.picmorrow.navigation.AppDestination
 import com.picmorrow.ui.theme.PicmorrowTheme
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -146,5 +149,36 @@ class NewPhotoTaskScreenUiTest {
         composeRule.onNodeWithTag("reminder_row").performScrollTo().performClick()
         composeRule.onNodeWithText("Remove reminder").assertIsDisplayed().performClick()
         composeRule.onNodeWithText("Set a reminder").assertIsDisplayed()
+    }
+
+    @Test
+    fun savePassesPhotoCategoryTextAndReminder() {
+        var savedDraft: PhotoTaskDraft? = null
+        composeRule.setContent {
+            PicmorrowTheme {
+                NewPhotoTaskScreen(
+                    photoPath = "/data/user/0/photo.jpg",
+                    selectedCategory = CameraCategory.Parking,
+                    onCancelClick = {},
+                    onRetakeClick = {},
+                    onSaveClick = { savedDraft = it },
+                )
+            }
+        }
+
+        composeRule.onAllNodes(hasSetTextAction())[0].performTextInput("Buy milk")
+        composeRule.onAllNodes(hasSetTextAction())[1].performTextInput("Two cartons")
+        Espresso.closeSoftKeyboard()
+        composeRule.onNodeWithText("Buy").performClick()
+        composeRule.onNodeWithTag("reminder_row").performScrollTo().performClick()
+        composeRule.onNodeWithText("In 1 hour").performClick()
+        composeRule.onNodeWithText("Save task").performClick()
+
+        assertNotNull(savedDraft)
+        assertEquals("/data/user/0/photo.jpg", savedDraft?.photoPath)
+        assertEquals("Buy", savedDraft?.category)
+        assertEquals("Buy milk", savedDraft?.title)
+        assertEquals("Two cartons", savedDraft?.notes)
+        assertTrue(savedDraft!!.reminderAtMillis!! > System.currentTimeMillis())
     }
 }

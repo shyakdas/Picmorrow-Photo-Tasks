@@ -14,7 +14,7 @@ import com.picmorrow.feature.camera.presentation.model.CameraCategory
 import com.picmorrow.feature.camera.presentation.screen.CameraRoute
 import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
 import com.picmorrow.feature.phototasks.presentation.screen.HomeScreen
-import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskScreen
+import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskRoute
 
 @Composable
 fun PicmorrowNavHost(
@@ -95,7 +95,7 @@ private fun NavGraphBuilder.newPhotoTaskDestination(navController: NavHostContro
                 ?.let { runCatching { CameraCategory.valueOf(it) }.getOrNull() }
                 ?: CameraCategory.Parking
 
-        NewPhotoTaskScreen(
+        NewPhotoTaskRoute(
             photoPath = photoPath,
             selectedCategory = category,
             onCancelClick = {
@@ -104,7 +104,12 @@ private fun NavGraphBuilder.newPhotoTaskDestination(navController: NavHostContro
             onRetakeClick = {
                 navController.navigateUp()
             },
-            onSaveClick = {},
+            onSaved = {
+                navController.navigate(AppDestination.Home.route) {
+                    popUpTo(navController.graph.id)
+                    launchSingleTop = true
+                }
+            },
         )
     }
 }

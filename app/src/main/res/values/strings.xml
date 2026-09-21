@@ -47,4 +47,7 @@
     <string name="reminder_remove">Remove reminder</string>
     <string name="reminder_choose_future_time">Choose a future time</string>
     <string name="new_photo_task_save">Save task</string>
+    <string name="new_photo_task_saving">Saving&#8230;</string>
+    <string name="new_photo_task_title_required">Add a title to save this task.</string>
+    <string name="new_photo_task_save_failed">Could not save this task. Please try again.</string>
 </resources>
