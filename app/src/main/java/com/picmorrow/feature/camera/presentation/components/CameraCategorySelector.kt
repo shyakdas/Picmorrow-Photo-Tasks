@@ -13,13 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.ui.theme.PicmorrowTheme
 
 @Composable
 internal fun CameraCategorySelector(
-    selectedCategory: CameraCategory,
-    onCategorySelected: (CameraCategory) -> Unit,
+    selectedCategory: PhotoTaskCategory,
+    onCategorySelected: (PhotoTaskCategory) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -29,7 +29,7 @@ internal fun CameraCategorySelector(
         horizontalArrangement = Arrangement.spacedBy(CATEGORY_CHIP_SPACING),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CameraCategory.entries.forEach { category ->
+        PhotoTaskCategory.entries.forEach { category ->
             CameraCategoryChip(
                 category = category,
                 selected = category == selectedCategory,
@@ -56,7 +56,7 @@ private fun CameraCategorySelectorPreview() {
                 .padding(vertical = 16.dp),
         ) {
             CameraCategorySelector(
-                selectedCategory = CameraCategory.Remember,
+                selectedCategory = PhotoTaskCategory.Remember,
                 onCategorySelected = {},
                 modifier = Modifier.fillMaxWidth(),
             )

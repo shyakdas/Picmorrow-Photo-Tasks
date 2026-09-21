@@ -21,7 +21,7 @@ import com.picmorrow.feature.camera.presentation.components.CameraBackground
 import com.picmorrow.feature.camera.presentation.components.CameraCaptureButton
 import com.picmorrow.feature.camera.presentation.components.CameraCategorySelector
 import com.picmorrow.feature.camera.presentation.components.CameraTopBar
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.camera.presentation.screen.CameraPermissionScreen
 import com.picmorrow.ui.theme.PicmorrowTheme
 import org.junit.Rule
@@ -89,7 +89,7 @@ private fun CameraControlsSnapshotContent() {
                 verticalArrangement = Arrangement.Bottom,
             ) {
                 CameraCategorySelector(
-                    selectedCategory = CameraCategory.Remember,
+                    selectedCategory = PhotoTaskCategory.Remember,
                     onCategorySelected = {},
                     modifier = Modifier.fillMaxWidth(),
                 )

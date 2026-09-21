@@ -2,7 +2,7 @@ package com.picmorrow.feature.camera.presentation
 
 import androidx.lifecycle.ViewModel
 import com.picmorrow.R
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.camera.presentation.model.CameraUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +23,7 @@ internal class CameraViewModel : ViewModel() {
         }
     }
 
-    fun selectCategory(category: CameraCategory) {
+    fun selectCategory(category: PhotoTaskCategory) {
         _uiState.update { state ->
             state.copy(
                 contentUiState = state.contentUiState.copy(

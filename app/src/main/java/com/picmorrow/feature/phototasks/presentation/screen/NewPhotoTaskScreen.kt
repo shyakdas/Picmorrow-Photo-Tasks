@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.picmorrow.R
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.presentation.components.CapturedPhotoCard
 import com.picmorrow.feature.phototasks.presentation.components.CategorySelector
 import com.picmorrow.feature.phototasks.presentation.components.FieldLabel
@@ -47,7 +47,7 @@ import com.picmorrow.ui.theme.PicmorrowTheme
 @Composable
 internal fun NewPhotoTaskScreen(
     photoPath: String,
-    selectedCategory: CameraCategory,
+    selectedCategory: PhotoTaskCategory,
     onCancelClick: () -> Unit,
     onRetakeClick: () -> Unit,
     onSaveClick: (PhotoTaskDraft) -> Unit,
@@ -217,7 +217,7 @@ private fun NewPhotoTaskScreenLightPreview() {
     PicmorrowTheme(darkTheme = false) {
         NewPhotoTaskScreen(
             photoPath = "",
-            selectedCategory = CameraCategory.Remember,
+            selectedCategory = PhotoTaskCategory.Remember,
             onCancelClick = {},
             onRetakeClick = {},
             onSaveClick = {},
@@ -233,7 +233,7 @@ private fun NewPhotoTaskScreenDarkPreview() {
     PicmorrowTheme(darkTheme = true) {
         NewPhotoTaskScreen(
             photoPath = "",
-            selectedCategory = CameraCategory.Remember,
+            selectedCategory = PhotoTaskCategory.Remember,
             onCancelClick = {},
             onRetakeClick = {},
             onSaveClick = {},

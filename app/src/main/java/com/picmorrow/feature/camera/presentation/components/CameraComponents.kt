@@ -23,7 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.camera.presentation.model.CameraContentUiState
 import com.picmorrow.feature.camera.presentation.screen.CameraPreview
 import com.picmorrow.ui.theme.PicmorrowTheme
@@ -32,7 +32,7 @@ import com.picmorrow.ui.theme.PicmorrowTheme
 internal fun CameraContent(
     imageCapture: ImageCapture,
     uiState: CameraContentUiState,
-    onCategorySelected: (CameraCategory) -> Unit,
+    onCategorySelected: (PhotoTaskCategory) -> Unit,
     onCaptureClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -144,7 +144,7 @@ private fun CameraComponentsPreview() {
                 Spacer(modifier = Modifier.weight(1f))
 
                 CameraCategorySelector(
-                    selectedCategory = CameraCategory.Remember,
+                    selectedCategory = PhotoTaskCategory.Remember,
                     onCategorySelected = {},
                     modifier = Modifier.fillMaxWidth(),
                 )

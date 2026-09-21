@@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskColors
 
 @Composable
 internal fun CategorySelector(
-    selectedCategory: CameraCategory,
+    selectedCategory: PhotoTaskCategory,
     colors: NewPhotoTaskColors,
-    onCategorySelected: (CameraCategory) -> Unit,
+    onCategorySelected: (PhotoTaskCategory) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -25,7 +25,7 @@ internal fun CategorySelector(
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(CATEGORY_SPACING),
     ) {
-        CameraCategory.entries.forEach { category ->
+        PhotoTaskCategory.entries.forEach { category ->
             CategoryChip(
                 category = category,
                 selected = category == selectedCategory,
@@ -53,7 +53,7 @@ internal fun CategorySelector(
 private fun CategorySelectorPreview() {
     NewPhotoTaskPreviewSurface { colors ->
         CategorySelector(
-            selectedCategory = CameraCategory.Buy,
+            selectedCategory = PhotoTaskCategory.Buy,
             colors = colors,
             onCategorySelected = {},
         )

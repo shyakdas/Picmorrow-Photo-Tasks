@@ -13,12 +13,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.picmorrow.core.common.hasCameraPermission
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 
 @Composable
 internal fun CameraRoute(
     onCloseClick: () -> Unit,
-    onPhotoCaptured: (Uri, CameraCategory) -> Unit,
+    onPhotoCaptured: (Uri, PhotoTaskCategory) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current

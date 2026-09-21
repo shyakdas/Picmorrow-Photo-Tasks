@@ -10,10 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.camera.presentation.screen.CameraRoute
 import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
-import com.picmorrow.feature.phototasks.presentation.screen.HomeScreen
+import com.picmorrow.feature.home.presentation.screen.HomeRoute
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskRoute
 
 @Composable
@@ -43,7 +43,7 @@ fun PicmorrowNavHost(
         }
 
         composable(AppDestination.Home.route) {
-            HomeScreen(
+            HomeRoute(
                 onTakePhotoClick = {
                     navController.navigate(AppDestination.Camera.route)
                 },
@@ -92,8 +92,8 @@ private fun NavGraphBuilder.newPhotoTaskDestination(navController: NavHostContro
         val category =
             backStackEntry.arguments
                 ?.getString(AppDestination.NewPhotoTask.CategoryArg)
-                ?.let { runCatching { CameraCategory.valueOf(it) }.getOrNull() }
-                ?: CameraCategory.Parking
+                ?.let { runCatching { PhotoTaskCategory.valueOf(it) }.getOrNull() }
+                ?: PhotoTaskCategory.Parking
 
         NewPhotoTaskRoute(
             photoPath = photoPath,

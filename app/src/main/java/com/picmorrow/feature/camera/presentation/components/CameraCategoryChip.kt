@@ -25,12 +25,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.ui.theme.PicmorrowTheme
 
 @Composable
 internal fun CameraCategoryChip(
-    category: CameraCategory,
+    category: PhotoTaskCategory,
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -91,7 +91,7 @@ private fun CameraCategoryChipPreview() {
                 .padding(16.dp),
         ) {
             CameraCategoryChip(
-                category = CameraCategory.Remember,
+                category = PhotoTaskCategory.Remember,
                 selected = true,
                 onClick = {},
             )

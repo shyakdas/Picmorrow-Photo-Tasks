@@ -35,13 +35,13 @@ import com.picmorrow.feature.camera.presentation.CameraViewModel
 import com.picmorrow.feature.camera.presentation.components.CameraBackground
 import com.picmorrow.feature.camera.presentation.components.CameraContent
 import com.picmorrow.feature.camera.presentation.components.CameraTopBar
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import java.io.File
 
 @Composable
 internal fun CameraScreen(
     onCloseClick: () -> Unit,
-    onPhotoCaptured: (Uri, CameraCategory) -> Unit,
+    onPhotoCaptured: (Uri, PhotoTaskCategory) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CameraViewModel = viewModel(),
 ) {

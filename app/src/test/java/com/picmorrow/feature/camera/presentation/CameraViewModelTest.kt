@@ -1,7 +1,7 @@
 package com.picmorrow.feature.camera.presentation
 
 import com.picmorrow.R
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -15,7 +15,7 @@ class CameraViewModelTest {
         val uiState = viewModel.uiState.value
 
         assertFalse(uiState.contentUiState.flashEnabled)
-        assertEquals(CameraCategory.Parking, uiState.contentUiState.selectedCategory)
+        assertEquals(PhotoTaskCategory.Parking, uiState.contentUiState.selectedCategory)
         assertEquals(null, uiState.captureStatusRes)
     }
 
@@ -32,9 +32,9 @@ class CameraViewModelTest {
 
     @Test
     fun selectCategory_updatesSelectedCategory() {
-        viewModel.selectCategory(CameraCategory.Remember)
+        viewModel.selectCategory(PhotoTaskCategory.Remember)
 
-        assertEquals(CameraCategory.Remember, viewModel.uiState.value.contentUiState.selectedCategory)
+        assertEquals(PhotoTaskCategory.Remember, viewModel.uiState.value.contentUiState.selectedCategory)
     }
 
     @Test

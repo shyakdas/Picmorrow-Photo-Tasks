@@ -5,6 +5,8 @@ import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
@@ -42,7 +44,7 @@ class WelcomeScreenUiTest {
         composeRule.onNodeWithText(string(R.string.welcome_explore_first)).performClick()
         composeRule.waitForIdle()
 
-        composeRule.onNodeWithText(string(R.string.active_title)).assertIsDisplayed()
+        composeRule.onAllNodesWithText(string(R.string.active_title)).onFirst().assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.active_empty_title)).assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.active_take_photo)).assertIsDisplayed()
     }

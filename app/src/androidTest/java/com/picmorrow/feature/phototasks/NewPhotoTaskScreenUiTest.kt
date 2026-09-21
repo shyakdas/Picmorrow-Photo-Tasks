@@ -12,7 +12,7 @@ import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.domain.model.PhotoTaskDraft
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskScreen
 import com.picmorrow.navigation.AppDestination
@@ -36,7 +36,7 @@ class NewPhotoTaskScreenUiTest {
             PicmorrowTheme {
                 NewPhotoTaskScreen(
                     photoPath = "",
-                    selectedCategory = CameraCategory.Remember,
+                    selectedCategory = PhotoTaskCategory.Remember,
                     onCancelClick = {},
                     onRetakeClick = { retakeCount++ },
                     onSaveClick = {},
@@ -63,7 +63,7 @@ class NewPhotoTaskScreenUiTest {
             PicmorrowTheme {
                 NewPhotoTaskScreen(
                     photoPath = "",
-                    selectedCategory = CameraCategory.Remember,
+                    selectedCategory = PhotoTaskCategory.Remember,
                     onCancelClick = {},
                     onRetakeClick = {},
                     onSaveClick = {},
@@ -83,7 +83,7 @@ class NewPhotoTaskScreenUiTest {
             PicmorrowTheme {
                 NewPhotoTaskScreen(
                     photoPath = "",
-                    selectedCategory = CameraCategory.Parking,
+                    selectedCategory = PhotoTaskCategory.Parking,
                     onCancelClick = {},
                     onRetakeClick = {},
                     onSaveClick = {},
@@ -109,7 +109,7 @@ class NewPhotoTaskScreenUiTest {
             PicmorrowTheme {
                 NewPhotoTaskScreen(
                     photoPath = "",
-                    selectedCategory = CameraCategory.Parking,
+                    selectedCategory = PhotoTaskCategory.Parking,
                     onCancelClick = {},
                     onRetakeClick = {},
                     onSaveClick = {},
@@ -136,7 +136,7 @@ class NewPhotoTaskScreenUiTest {
             PicmorrowTheme {
                 NewPhotoTaskScreen(
                     photoPath = "",
-                    selectedCategory = CameraCategory.Remember,
+                    selectedCategory = PhotoTaskCategory.Remember,
                     onCancelClick = {},
                     onRetakeClick = {},
                     onSaveClick = {},
@@ -158,7 +158,7 @@ class NewPhotoTaskScreenUiTest {
             PicmorrowTheme {
                 NewPhotoTaskScreen(
                     photoPath = "/data/user/0/photo.jpg",
-                    selectedCategory = CameraCategory.Parking,
+                    selectedCategory = PhotoTaskCategory.Parking,
                     onCancelClick = {},
                     onRetakeClick = {},
                     onSaveClick = { savedDraft = it },

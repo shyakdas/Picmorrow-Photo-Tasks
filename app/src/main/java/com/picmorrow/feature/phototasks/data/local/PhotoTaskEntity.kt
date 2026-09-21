@@ -11,4 +11,5 @@ data class PhotoTaskEntity(
     val title: String,
     val notes: String,
     val reminderAtMillis: Long?,
+    val completedAtMillis: Long? = null,
 )

@@ -2,6 +2,8 @@
 
 package com.picmorrow.feature.phototasks.presentation.components
 
+import com.picmorrow.feature.phototasks.presentation.common.components.CapturedPhotoImage
+
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.picmorrow.core.data.local.AppDatabase
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
 import com.picmorrow.feature.phototasks.domain.usecase.SavePhotoTaskUseCase
 import com.picmorrow.feature.phototasks.presentation.NewPhotoTaskViewModel
@@ -16,7 +16,7 @@ import com.picmorrow.feature.phototasks.presentation.NewPhotoTaskViewModel
 @Composable
 internal fun NewPhotoTaskRoute(
     photoPath: String,
-    selectedCategory: CameraCategory,
+    selectedCategory: PhotoTaskCategory,
     onCancelClick: () -> Unit,
     onRetakeClick: () -> Unit,
     onSaved: () -> Unit,

@@ -12,8 +12,12 @@
     <string name="active_empty_body">A parking spot, a shopping label, a collection slip.</string>
     <string name="active_take_photo">Take photo</string>
     <string name="active_completed_tab">Completed</string>
+    <string name="task_completed_on">Completed %1$s</string>
+    <string name="completed_empty_title">Nothing completed yet</string>
+    <string name="completed_empty_body">Tasks you finish will appear here.</string>
     <string name="active_settings_content_description">Settings</string>
     <string name="active_camera_content_description">Camera</string>
+    <string name="task_complete_content_description">Complete %1$s</string>
     <string name="camera_close_content_description">Close camera</string>
     <string name="camera_flash_on_content_description">Flash on</string>
     <string name="camera_flash_off_content_description">Flash off</string>

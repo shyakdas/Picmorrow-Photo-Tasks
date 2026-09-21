@@ -2,7 +2,7 @@ package com.picmorrow.feature.phototasks
 
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
-import com.picmorrow.feature.camera.presentation.model.CameraCategory
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskScreen
 import com.picmorrow.ui.theme.PicmorrowTheme
 import org.junit.Rule
@@ -18,7 +18,7 @@ class NewPhotoTaskScreenScreenshotTest {
             PicmorrowTheme(darkTheme = false) {
                 NewPhotoTaskScreen(
                     photoPath = "",
-                    selectedCategory = CameraCategory.Remember,
+                    selectedCategory = PhotoTaskCategory.Remember,
                     onCancelClick = {},
                     onRetakeClick = {},
                     onSaveClick = {},
@@ -34,7 +34,7 @@ class NewPhotoTaskScreenScreenshotTest {
             PicmorrowTheme(darkTheme = true) {
                 NewPhotoTaskScreen(
                     photoPath = "",
-                    selectedCategory = CameraCategory.Remember,
+                    selectedCategory = PhotoTaskCategory.Remember,
                     onCancelClick = {},
                     onRetakeClick = {},
                     onSaveClick = {},
