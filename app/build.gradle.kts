@@ -97,6 +97,7 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             "**/core/common/PermissionExtensions*.*",
             "**/navigation/PicmorrowNavHost*.*",
             "**/presentation/components/**",
+            "**/presentation/common/components/**",
             "**/presentation/screen/**",
             "**/ui/theme/**",
         )
