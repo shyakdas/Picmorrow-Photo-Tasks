@@ -64,6 +64,16 @@ jobs:
       - name: Run unit tests with coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
+      - name: Upload failed test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-failures
+          path: |
+            app/build/paparazzi/failures
+            app/build/test-results/testDebugUnitTest
+          if-no-files-found: ignore
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v7
         with:
@@ -108,13 +118,14 @@ jobs:
       - run: chmod +x ./gradlew
 
       - name: Run snapshot tests
-        run: |
-          for attempt in 1 2 3; do
-            ./gradlew verifyPaparazziDebug && exit 0
-            if [ "$attempt" -eq 3 ]; then
-              echo "verifyPaparazziDebug failed after 3 attempts"
-              exit 1
-            fi
-            echo "verifyPaparazziDebug failed on attempt ${attempt}. Retrying in 20s..."
-            sleep 20
-          done
+        run: ./gradlew verifyPaparazziDebug
+
+      - name: Upload failed snapshot diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshot-failures
+          path: |
+            app/build/paparazzi/failures
+            app/build/test-results/testDebugUnitTest
+          if-no-files-found: ignore

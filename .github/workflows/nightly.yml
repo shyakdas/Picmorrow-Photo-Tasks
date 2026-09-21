@@ -44,6 +44,16 @@ jobs:
             jacocoTestReport \
             verifyPaparazziDebug
 
+      - name: Upload failed test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-test-failures
+          path: |
+            app/build/paparazzi/failures
+            app/build/test-results/testDebugUnitTest
+          if-no-files-found: ignore
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v7
         with:
