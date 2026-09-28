@@ -93,6 +93,13 @@ class PhotoTaskRepositoryImplTest {
         assertTrue(repository.hasPhotoTasks())
     }
 
+    @Test
+    fun findByIdReturnsNullWhenTaskDoesNotExist() = runBlocking {
+        val repository = PhotoTaskRepositoryImpl(RecordingDao())
+
+        assertEquals(null, repository.findById(99))
+    }
+
     private class RecordingDao : PhotoTaskDao {
         var inserted: PhotoTaskEntity? = null
         val active = MutableStateFlow<List<PhotoTaskEntity>>(emptyList())

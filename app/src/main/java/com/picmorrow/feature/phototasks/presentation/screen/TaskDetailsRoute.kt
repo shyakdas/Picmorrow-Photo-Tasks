@@ -6,6 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
 import com.picmorrow.feature.phototasks.presentation.TaskDetailsViewModel
@@ -19,7 +21,9 @@ internal fun TaskDetailsRoute(
     val context = LocalContext.current.applicationContext
     val factory = remember(context, taskId) {
         val repository = PhotoTaskRepositoryImpl(AppDatabase.getInstance(context).photoTaskDao())
-        TaskDetailsViewModel.Factory(taskId, repository)
+        viewModelFactory {
+            initializer { TaskDetailsViewModel(taskId, repository) }
+        }
     }
     val viewModel: TaskDetailsViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

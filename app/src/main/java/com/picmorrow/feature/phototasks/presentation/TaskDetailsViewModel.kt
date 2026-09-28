@@ -1,7 +1,6 @@
 package com.picmorrow.feature.phototasks.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskDetailsRepository
 import com.picmorrow.feature.phototasks.presentation.model.TaskDetailsUiState
@@ -42,14 +41,5 @@ internal class TaskDetailsViewModel(
                 _uiState.value = content
             }
         }
-    }
-
-    class Factory(
-        private val taskId: Long,
-        private val repository: PhotoTaskDetailsRepository,
-    ) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            TaskDetailsViewModel(taskId, repository) as T
     }
 }
