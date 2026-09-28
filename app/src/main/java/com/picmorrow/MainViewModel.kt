@@ -1,7 +1,6 @@
 package com.picmorrow
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.picmorrow.feature.phototasks.domain.usecase.HasPhotoTasksUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,12 +23,6 @@ class MainViewModel(private val hasPhotoTasks: HasPhotoTasksUseCase) : ViewModel
                         onFailure = { MainUiState.Introduction },
                     )
         }
-    }
-
-    class Factory(private val hasPhotoTasks: HasPhotoTasksUseCase) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            MainViewModel(hasPhotoTasks) as T
     }
 }
 

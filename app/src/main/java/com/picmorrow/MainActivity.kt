@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
 import com.picmorrow.feature.phototasks.domain.usecase.HasPhotoTasksUseCase
@@ -18,7 +20,11 @@ import com.picmorrow.ui.theme.PicmorrowTheme
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels {
         val dao = AppDatabase.getInstance(applicationContext).photoTaskDao()
-        MainViewModel.Factory(HasPhotoTasksUseCase(PhotoTaskRepositoryImpl(dao)))
+        viewModelFactory {
+            initializer {
+                MainViewModel(HasPhotoTasksUseCase(PhotoTaskRepositoryImpl(dao)))
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

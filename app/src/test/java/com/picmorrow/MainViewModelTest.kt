@@ -2,6 +2,7 @@ package com.picmorrow
 
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskStatusRepository
 import com.picmorrow.feature.phototasks.domain.usecase.HasPhotoTasksUseCase
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -46,6 +47,35 @@ class MainViewModelTest {
         val repository = PhotoTaskStatusRepository { error("Database unavailable") }
         val viewModel = MainViewModel(HasPhotoTasksUseCase(repository))
 
+        advanceUntilIdle()
+
+        assertEquals(MainUiState.Introduction, viewModel.uiState.value)
+    }
+
+    @Test
+    fun remainsLoadingWhileDatabaseQueryIsSuspended() = runTest(dispatcher) {
+        val queryResult = CompletableDeferred<Boolean>()
+        val repository = PhotoTaskStatusRepository {
+            queryResult.await()
+        }
+        val viewModel = MainViewModel(HasPhotoTasksUseCase(repository))
+
+        dispatcher.scheduler.runCurrent()
+        assertEquals(MainUiState.Loading, viewModel.uiState.value)
+        queryResult.complete(true)
+        advanceUntilIdle()
+
+        assertEquals(MainUiState.Home, viewModel.uiState.value)
+    }
+
+    @Test
+    fun suspendedDatabaseFailureFallsBackToIntroduction() = runTest(dispatcher) {
+        val queryResult = CompletableDeferred<Boolean>()
+        val repository = PhotoTaskStatusRepository { queryResult.await() }
+        val viewModel = MainViewModel(HasPhotoTasksUseCase(repository))
+
+        dispatcher.scheduler.runCurrent()
+        queryResult.completeExceptionally(IllegalStateException("Database unavailable"))
         advanceUntilIdle()
 
         assertEquals(MainUiState.Introduction, viewModel.uiState.value)
