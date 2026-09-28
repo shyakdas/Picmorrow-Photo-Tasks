@@ -7,7 +7,9 @@ import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.data.local.PhotoTaskEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import kotlinx.coroutines.flow.first
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -58,6 +60,22 @@ class PhotoTaskDatabaseTest {
             assertEquals(listOf(id), dao.observeCompleted().first().map { it.id })
             assertEquals(0, dao.complete(id, 5678L))
             assertEquals(1234L, dao.findById(id)?.completedAtMillis)
+        } finally {
+            database.close()
+        }
+    }
+
+    @Test
+    fun hasTasksReflectsWhetherAnyPhotoTaskExists() = runBlocking {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        try {
+            val dao = database.photoTaskDao()
+            assertFalse(dao.hasTasks())
+
+            dao.insert(PhotoTaskEntity(photoPath = "/photo.jpg", category = "Parking", title = "Find car", notes = "", reminderAtMillis = null))
+
+            assertTrue(dao.hasTasks())
         } finally {
             database.close()
         }

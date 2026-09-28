@@ -13,6 +13,9 @@ interface PhotoTaskDao {
     @Query("SELECT * FROM photo_tasks WHERE id = :id")
     suspend fun findById(id: Long): PhotoTaskEntity?
 
+    @Query("SELECT EXISTS(SELECT 1 FROM photo_tasks LIMIT 1)")
+    suspend fun hasTasks(): Boolean
+
     @Query("SELECT * FROM photo_tasks WHERE completedAtMillis IS NULL ORDER BY id DESC")
     fun observeActive(): Flow<List<PhotoTaskEntity>>
 

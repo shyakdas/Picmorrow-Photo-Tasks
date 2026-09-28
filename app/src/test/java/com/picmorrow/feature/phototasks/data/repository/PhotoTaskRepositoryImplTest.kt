@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PhotoTaskRepositoryImplTest {
@@ -69,6 +71,24 @@ class PhotoTaskRepositoryImplTest {
         assertEquals(42L to 5678L, dao.completedCall)
     }
 
+    @Test
+    fun hasPhotoTasksDelegatesToDao() = runBlocking {
+        val dao = RecordingDao()
+        val repository = PhotoTaskRepositoryImpl(dao)
+
+        assertFalse(repository.hasPhotoTasks())
+        dao.insert(
+            PhotoTaskEntity(
+                photoPath = "/photo.jpg",
+                category = "Parking",
+                title = "Find car",
+                notes = "",
+                reminderAtMillis = null,
+            ),
+        )
+        assertTrue(repository.hasPhotoTasks())
+    }
+
     private class RecordingDao : PhotoTaskDao {
         var inserted: PhotoTaskEntity? = null
         val active = MutableStateFlow<List<PhotoTaskEntity>>(emptyList())
@@ -81,6 +101,8 @@ class PhotoTaskRepositoryImplTest {
         }
 
         override suspend fun findById(id: Long): PhotoTaskEntity? = inserted
+
+        override suspend fun hasTasks(): Boolean = inserted != null
 
         override fun observeActive(): Flow<List<PhotoTaskEntity>> = active
 
