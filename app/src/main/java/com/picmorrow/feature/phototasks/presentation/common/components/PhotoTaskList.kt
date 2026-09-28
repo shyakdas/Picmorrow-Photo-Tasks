@@ -18,6 +18,7 @@ internal fun PhotoTaskList(
     colors: PhotoTaskListColors,
     darkTheme: Boolean,
     onCompleteClick: ((Long) -> Unit)?,
+    onTaskClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
     bottomPadding: Dp = 100.dp,
 ) {
@@ -32,6 +33,7 @@ internal fun PhotoTaskList(
                 colors = colors,
                 darkTheme = darkTheme,
                 onCompleteClick = onCompleteClick?.let { { it(task.id) } },
+                onClick = { onTaskClick(task.id) },
             )
         }
     }

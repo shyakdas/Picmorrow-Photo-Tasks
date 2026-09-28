@@ -17,6 +17,7 @@ internal fun ActiveScreen(
     colors: PhotoTaskListColors,
     darkTheme: Boolean,
     onCompleteClick: (Long) -> Unit,
+    onTaskClick: (Long) -> Unit,
     onTakePhotoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -26,6 +27,7 @@ internal fun ActiveScreen(
             colors = colors,
             darkTheme = darkTheme,
             onCompleteClick = onCompleteClick,
+            onTaskClick = onTaskClick,
             modifier = modifier,
         )
     } else {

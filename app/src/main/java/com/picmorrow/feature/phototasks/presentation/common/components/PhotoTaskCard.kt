@@ -44,15 +44,18 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
+@Suppress("LongParameterList")
 internal fun PhotoTaskCard(
     task: PhotoTask,
     colors: PhotoTaskListColors,
     darkTheme: Boolean,
     onCompleteClick: (() -> Unit)?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val category = PhotoTaskCategory.entries.firstOrNull { it.name == task.category }
     Surface(
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         color = colors.cardBackground,
@@ -137,7 +140,7 @@ private fun PhotoTaskCardDetails(
 }
 
 @Composable
-private fun CategoryBadge(category: PhotoTaskCategory, darkTheme: Boolean) {
+internal fun CategoryBadge(category: PhotoTaskCategory, darkTheme: Boolean) {
     val (background, foreground) = when (category) {
         PhotoTaskCategory.Parking ->
             if (darkTheme) Color(0xFF263A4A) to Color(0xFF8EC3F4) else Color(0xFFFFE7E1) to Color(0xFF25558E)
@@ -177,6 +180,7 @@ private fun PhotoTaskCardPreview() {
             colors = photoTaskListColors(darkTheme),
             darkTheme = darkTheme,
             onCompleteClick = {},
+            onClick = {},
         )
     }
 }

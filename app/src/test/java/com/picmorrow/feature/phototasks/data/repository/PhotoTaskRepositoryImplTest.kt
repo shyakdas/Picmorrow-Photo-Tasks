@@ -27,6 +27,7 @@ class PhotoTaskRepositoryImplTest {
                 title = draft.title,
                 notes = draft.notes,
                 reminderAtMillis = draft.reminderAtMillis,
+                capturedAtMillis = draft.capturedAtMillis,
             ),
             dao.inserted,
         )
@@ -54,6 +55,7 @@ class PhotoTaskRepositoryImplTest {
             notes = "Level 2",
             reminderAtMillis = 1234L,
         )
+        dao.inserted = task
         dao.active.value = listOf(task)
 
         val active = repository.observeActive().first().single()
@@ -63,12 +65,14 @@ class PhotoTaskRepositoryImplTest {
         assertEquals(task.title, active.title)
         assertEquals(task.notes, active.notes)
         assertEquals(task.reminderAtMillis, active.reminderAtMillis)
+        assertEquals(task.capturedAtMillis, active.capturedAtMillis)
         assertEquals(null, active.completedAtMillis)
 
         dao.completed.value = listOf(task.copy(completedAtMillis = 5678L))
         assertEquals(5678L, repository.observeCompleted().first().single().completedAtMillis)
         repository.complete(42, 5678L)
         assertEquals(42L to 5678L, dao.completedCall)
+        assertEquals(active, repository.findById(42))
     }
 
     @Test
@@ -87,6 +91,13 @@ class PhotoTaskRepositoryImplTest {
             ),
         )
         assertTrue(repository.hasPhotoTasks())
+    }
+
+    @Test
+    fun findByIdReturnsNullWhenTaskDoesNotExist() = runBlocking {
+        val repository = PhotoTaskRepositoryImpl(RecordingDao())
+
+        assertEquals(null, repository.findById(99))
     }
 
     private class RecordingDao : PhotoTaskDao {

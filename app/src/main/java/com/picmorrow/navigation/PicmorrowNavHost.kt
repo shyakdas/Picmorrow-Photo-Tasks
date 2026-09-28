@@ -15,6 +15,7 @@ import com.picmorrow.feature.camera.presentation.screen.CameraRoute
 import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
 import com.picmorrow.feature.home.presentation.screen.HomeRoute
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskRoute
+import com.picmorrow.feature.phototasks.presentation.screen.TaskDetailsRoute
 
 @Composable
 fun PicmorrowNavHost(
@@ -48,6 +49,9 @@ fun PicmorrowNavHost(
                     navController.navigate(AppDestination.Camera.route)
                 },
                 onSettingsClick = {},
+                onTaskClick = { taskId ->
+                    navController.navigate(AppDestination.TaskDetails.route(taskId))
+                },
             )
         }
 
@@ -68,6 +72,23 @@ fun PicmorrowNavHost(
         }
 
         newPhotoTaskDestination(navController)
+        taskDetailsDestination(navController)
+    }
+}
+
+private fun NavGraphBuilder.taskDetailsDestination(navController: NavHostController) {
+    composable(
+        route = AppDestination.TaskDetails.route,
+        arguments = listOf(
+            navArgument(AppDestination.TaskDetails.TaskIdArg) { type = NavType.LongType },
+        ),
+    ) { backStackEntry ->
+        val taskId = backStackEntry.arguments?.getLong(AppDestination.TaskDetails.TaskIdArg) ?: return@composable
+        TaskDetailsRoute(
+            taskId = taskId,
+            onBackClick = navController::navigateUp,
+            onEditClick = {},
+        )
     }
 }
 

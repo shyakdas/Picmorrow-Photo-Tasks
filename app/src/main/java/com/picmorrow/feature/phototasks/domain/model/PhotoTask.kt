@@ -8,4 +8,5 @@ data class PhotoTask(
     val notes: String,
     val reminderAtMillis: Long?,
     val completedAtMillis: Long?,
+    val capturedAtMillis: Long = 0,
 )

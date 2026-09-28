@@ -12,11 +12,13 @@ import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskEmpty
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskListColors
 
 @Composable
+@Suppress("LongParameterList")
 internal fun CompletedScreen(
     tasks: List<PhotoTask>,
     colors: PhotoTaskListColors,
     darkTheme: Boolean,
     onTakePhotoClick: () -> Unit,
+    onTaskClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (tasks.isNotEmpty()) {
@@ -25,6 +27,7 @@ internal fun CompletedScreen(
             colors = colors,
             darkTheme = darkTheme,
             onCompleteClick = null,
+            onTaskClick = onTaskClick,
             modifier = modifier,
             bottomPadding = 16.dp,
         )
