@@ -104,6 +104,7 @@ class PhotoTaskDatabaseTest {
             assertEquals("/old-photo.jpg", saved.photoPath)
             assertEquals("Find car", saved.title)
             assertNull(saved.completedAtMillis)
+            assertEquals(0L, saved.capturedAtMillis)
         } finally {
             database.close()
             context.deleteDatabase(databaseName)

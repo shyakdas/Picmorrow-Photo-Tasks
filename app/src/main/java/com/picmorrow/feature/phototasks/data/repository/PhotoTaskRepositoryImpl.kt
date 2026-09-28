@@ -7,13 +7,15 @@ import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskRepository
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskListingRepository
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskStatusRepository
+import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskDetailsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
     PhotoTaskRepository,
     PhotoTaskListingRepository,
-    PhotoTaskStatusRepository {
+    PhotoTaskStatusRepository,
+    PhotoTaskDetailsRepository {
     override suspend fun savePhotoTask(draft: PhotoTaskDraft): Long =
         dao.insert(
             PhotoTaskEntity(
@@ -22,6 +24,7 @@ class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
                 title = draft.title,
                 notes = draft.notes,
                 reminderAtMillis = draft.reminderAtMillis,
+                capturedAtMillis = draft.capturedAtMillis,
             ),
         )
 
@@ -37,6 +40,8 @@ class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
 
     override suspend fun hasPhotoTasks(): Boolean = dao.hasTasks()
 
+    override suspend fun findById(id: Long): PhotoTask? = dao.findById(id)?.toDomain()
+
     private fun PhotoTaskEntity.toDomain() = PhotoTask(
         id = id,
         photoPath = photoPath,
@@ -45,5 +50,6 @@ class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
         notes = notes,
         reminderAtMillis = reminderAtMillis,
         completedAtMillis = completedAtMillis,
+        capturedAtMillis = capturedAtMillis,
     )
 }

@@ -6,4 +6,5 @@ data class PhotoTaskDraft(
     val title: String,
     val notes: String,
     val reminderAtMillis: Long?,
+    val capturedAtMillis: Long = System.currentTimeMillis(),
 )

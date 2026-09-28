@@ -64,15 +64,19 @@ class HomeScreenUiTest {
     @Test
     fun homeScreen_showsSavedCardsAndCompletesTask() {
         var completedId: Long? = null
+        var openedId: Long? = null
         showHome(
             HomeContentState(activeTasks = listOf(task(7, "Parking", "Car - B2, pillar C14"), task(8, "Buy", "Check this bulb size"))),
             onCompleteClick = { completedId = it },
+            onTaskClick = { openedId = it },
         )
 
         composeRule.onNodeWithText("Car - B2, pillar C14").assertIsDisplayed()
         composeRule.onNodeWithText("Check this bulb size").assertIsDisplayed()
         composeRule.onNodeWithContentDescription("Complete Car - B2, pillar C14").performClick()
         assertEquals(7L, completedId)
+        composeRule.onNodeWithText("Check this bulb size").performClick()
+        assertEquals(8L, openedId)
     }
 
     @Test
@@ -107,13 +111,18 @@ class HomeScreenUiTest {
         composeRule.onNodeWithText(string(R.string.active_take_photo)).assertHasClickAction()
     }
 
-    private fun showHome(state: HomeContentState = HomeContentState(), onCompleteClick: (Long) -> Unit = {}) {
+    private fun showHome(
+        state: HomeContentState = HomeContentState(),
+        onCompleteClick: (Long) -> Unit = {},
+        onTaskClick: (Long) -> Unit = {},
+    ) {
         composeRule.setContent {
             PicmorrowTheme {
                 HomeScreen(
                     onTakePhotoClick = {},
                     onSettingsClick = {},
                     onCompleteClick = onCompleteClick,
+                    onTaskClick = onTaskClick,
                     contentState = state,
                 )
             }

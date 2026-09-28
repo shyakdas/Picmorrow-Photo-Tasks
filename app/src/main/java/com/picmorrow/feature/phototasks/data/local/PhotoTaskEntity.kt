@@ -1,5 +1,6 @@
 package com.picmorrow.feature.phototasks.data.local
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -12,4 +13,5 @@ data class PhotoTaskEntity(
     val notes: String,
     val reminderAtMillis: Long?,
     val completedAtMillis: Long? = null,
+    @ColumnInfo(defaultValue = "0") val capturedAtMillis: Long = System.currentTimeMillis(),
 )

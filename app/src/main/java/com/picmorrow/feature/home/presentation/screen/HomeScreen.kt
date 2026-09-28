@@ -61,6 +61,7 @@ internal fun HomeScreen(
     darkTheme: Boolean = isSystemInDarkTheme(),
     contentState: HomeContentState = HomeContentState(),
     onCompleteClick: (Long) -> Unit = {},
+    onTaskClick: (Long) -> Unit = {},
     initialTab: HomeTab = HomeTab.Active,
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(initialTab) }
@@ -80,6 +81,7 @@ internal fun HomeScreen(
                 onCategorySelected = { selectedCategory = it },
                 darkTheme = darkTheme,
                 onCompleteClick = onCompleteClick,
+                onTaskClick = onTaskClick,
                 onTakePhotoClick = onTakePhotoClick,
                 onSettingsClick = onSettingsClick,
             )
@@ -111,6 +113,7 @@ private fun HomeContent(
     onCategorySelected: (PhotoTaskCategory?) -> Unit,
     darkTheme: Boolean,
     onCompleteClick: (Long) -> Unit,
+    onTaskClick: (Long) -> Unit,
     onTakePhotoClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
@@ -149,6 +152,7 @@ private fun HomeContent(
                         colors = colors.taskList,
                         darkTheme = darkTheme,
                         onCompleteClick = onCompleteClick,
+                        onTaskClick = onTaskClick,
                         onTakePhotoClick = onTakePhotoClick,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -160,6 +164,7 @@ private fun HomeContent(
                         colors = colors.taskList,
                         darkTheme = darkTheme,
                         onTakePhotoClick = onTakePhotoClick,
+                        onTaskClick = onTaskClick,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

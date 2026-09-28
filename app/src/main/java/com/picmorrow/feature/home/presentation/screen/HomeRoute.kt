@@ -11,7 +11,11 @@ import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
 import com.picmorrow.feature.home.presentation.HomeViewModel
 
 @Composable
-internal fun HomeRoute(onTakePhotoClick: () -> Unit, onSettingsClick: () -> Unit) {
+internal fun HomeRoute(
+    onTakePhotoClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onTaskClick: (Long) -> Unit,
+) {
     val context = LocalContext.current.applicationContext
     val factory = remember(context) {
         HomeViewModel.Factory(PhotoTaskRepositoryImpl(AppDatabase.getInstance(context).photoTaskDao()))
@@ -23,6 +27,7 @@ internal fun HomeRoute(onTakePhotoClick: () -> Unit, onSettingsClick: () -> Unit
         onTakePhotoClick = onTakePhotoClick,
         onSettingsClick = onSettingsClick,
         onCompleteClick = viewModel::complete,
+        onTaskClick = onTaskClick,
         contentState = contentState,
     )
 }

@@ -14,6 +14,8 @@ class AppDestinationTest {
         assertEquals("welcome", AppDestination.Welcome.route)
         assertEquals("home", AppDestination.Home.route)
         assertEquals("camera", AppDestination.Camera.route)
+        assertEquals("task-detail/{taskId}", AppDestination.TaskDetails.route)
+        assertEquals("task-detail/42", AppDestination.TaskDetails.route(42))
         assertEquals(
             "new-photo-task?photoPath={photoPath}&category={category}",
             AppDestination.NewPhotoTask.route,
