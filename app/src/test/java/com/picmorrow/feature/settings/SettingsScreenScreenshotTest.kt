@@ -43,6 +43,8 @@ class SettingsScreenScreenshotTest {
                     onThemeModeSelected = {},
                     onNotificationClick = {},
                     onAddCameraShortcutClick = {},
+                    onAboutClick = {},
+                    onPrivacyPolicyClick = {},
                 )
             }
         }
@@ -61,6 +63,8 @@ class SettingsScreenScreenshotTest {
                     onThemeModeSelected = {},
                     onNotificationClick = {},
                     onAddCameraShortcutClick = {},
+                    onAboutClick = {},
+                    onPrivacyPolicyClick = {},
                 )
             }
         }

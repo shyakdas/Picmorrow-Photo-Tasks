@@ -29,7 +29,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.WarningAmber
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,7 +51,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.picmorrow.BuildConfig
 import com.picmorrow.R
 import com.picmorrow.feature.settings.domain.model.AppThemeMode
 import com.picmorrow.feature.settings.presentation.model.ThemeSettingsUiState
@@ -74,12 +71,12 @@ internal fun SettingsScreen(
     onThemeModeSelected: (AppThemeMode) -> Unit,
     onNotificationClick: () -> Unit,
     onAddCameraShortcutClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isPicmorrowDarkTheme(),
 ) {
     var showThemeSheet by remember { mutableStateOf(false) }
-    var showAboutDialog by remember { mutableStateOf(false) }
-    var showPrivacyDialog by remember { mutableStateOf(false) }
     val colors = settingsColors(darkTheme)
 
     Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -147,13 +144,13 @@ internal fun SettingsScreen(
                 SettingsRow(
                     title = stringResource(R.string.settings_about_picmorrow),
                     colors = colors,
-                    onClick = { showAboutDialog = true },
+                    onClick = onAboutClick,
                 )
                 Spacer(Modifier.height(10.dp))
                 SettingsRow(
                     title = stringResource(R.string.settings_privacy_policy),
                     colors = colors,
-                    onClick = { showPrivacyDialog = true },
+                    onClick = onPrivacyPolicyClick,
                 )
                 Spacer(Modifier.height(28.dp))
             }
@@ -168,20 +165,6 @@ internal fun SettingsScreen(
                 onThemeModeSelected(it)
                 showThemeSheet = false
             },
-        )
-    }
-    if (showAboutDialog) {
-        InfoDialog(
-            title = stringResource(R.string.settings_about_picmorrow),
-            body = stringResource(R.string.settings_about_body, BuildConfig.VERSION_NAME),
-            onDismiss = { showAboutDialog = false },
-        )
-    }
-    if (showPrivacyDialog) {
-        InfoDialog(
-            title = stringResource(R.string.settings_privacy_policy),
-            body = stringResource(R.string.settings_privacy_body),
-            onDismiss = { showPrivacyDialog = false },
         )
     }
 }
@@ -376,18 +359,6 @@ internal fun ThemeSheetContent(
     }
 }
 
-@Composable
-private fun InfoDialog(title: String, body: String, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(title) },
-        text = { Text(body, lineHeight = 21.sp) },
-        confirmButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.settings_ok)) }
-        },
-    )
-}
-
 private val AppThemeMode.labelRes: Int
     get() = when (this) {
         AppThemeMode.System -> R.string.settings_theme_system
@@ -440,6 +411,8 @@ private fun SettingsScreenPreview() {
             onThemeModeSelected = {},
             onNotificationClick = {},
             onAddCameraShortcutClick = {},
+            onAboutClick = {},
+            onPrivacyPolicyClick = {},
             darkTheme = darkTheme,
         )
     }

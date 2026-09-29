@@ -6,6 +6,8 @@ sealed class AppDestination(val route: String) {
     data object Welcome : AppDestination("welcome")
     data object Home : AppDestination("home")
     data object Settings : AppDestination("settings")
+    data object About : AppDestination("about")
+    data object PrivacyPolicy : AppDestination("privacy-policy")
     data object Camera : AppDestination("camera")
     data object TaskDetails : AppDestination("task-detail/{taskId}") {
         const val TaskIdArg = "taskId"

@@ -27,7 +27,11 @@ import com.picmorrow.feature.settings.presentation.ThemeSettingsViewModel
 import com.picmorrow.navigation.AppDestination
 
 @Composable
-internal fun SettingsRoute(onBackClick: () -> Unit) {
+internal fun SettingsRoute(
+    onBackClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+) {
     val context = LocalContext.current
     val applicationContext = context.applicationContext
     val factory = remember(applicationContext) {
@@ -55,6 +59,8 @@ internal fun SettingsRoute(onBackClick: () -> Unit) {
         onThemeModeSelected = viewModel::setThemeMode,
         onNotificationClick = { applicationContext.openNotificationSettings() },
         onAddCameraShortcutClick = { applicationContext.requestCameraShortcut() },
+        onAboutClick = onAboutClick,
+        onPrivacyPolicyClick = onPrivacyPolicyClick,
     )
 }
 
