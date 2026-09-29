@@ -4,7 +4,6 @@ package com.picmorrow.feature.taskdetails.presentation.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -56,6 +55,7 @@ import com.picmorrow.ui.theme.LightBorder
 import com.picmorrow.ui.theme.LightNavigationBar
 import com.picmorrow.ui.theme.LightSecondaryText
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.picmorrow.ui.theme.isPicmorrowDarkTheme
 
 @Composable
 @Suppress("LongParameterList")
@@ -66,7 +66,7 @@ internal fun TaskDetailsScreen(
     onDeletePhotoAndTaskClick: () -> Unit,
     onReviewLaterClick: () -> Unit,
     modifier: Modifier = Modifier,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isPicmorrowDarkTheme(),
 ) {
     var showCompletionSheet by rememberSaveable { mutableStateOf(false) }
 

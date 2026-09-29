@@ -94,6 +94,5 @@
     <string name="settings_privacy_policy">Privacy policy</string>
     <string name="settings_about_body">Picmorrow %1$s\n\nA private, local-first photo reminder app.</string>
     <string name="settings_privacy_body">Picmorrow stores tasks and app-held photos on this device. It does not require an account or upload your task data to a cloud service. Photos you explicitly export are copied to your gallery.</string>
-    <string name="settings_cancel">Cancel</string>
     <string name="settings_ok">OK</string>
 </resources>

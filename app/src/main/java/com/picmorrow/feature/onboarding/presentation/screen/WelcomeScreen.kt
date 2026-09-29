@@ -1,6 +1,5 @@
 package com.picmorrow.feature.onboarding.presentation.screen
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,13 +20,14 @@ import com.picmorrow.feature.onboarding.presentation.components.WelcomeCopy
 import com.picmorrow.feature.onboarding.presentation.components.WelcomeHero
 import com.picmorrow.feature.onboarding.presentation.model.WelcomeUiState
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.picmorrow.ui.theme.isPicmorrowDarkTheme
 
 @Composable
 fun WelcomeRoute(
     onTakeFirstPhotoClick: () -> Unit,
     onExploreFirstClick: () -> Unit,
     modifier: Modifier = Modifier,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isPicmorrowDarkTheme(),
     viewModel: WelcomeViewModel = viewModel(),
 ) {
     WelcomeScreen(

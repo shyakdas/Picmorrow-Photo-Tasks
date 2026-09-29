@@ -27,15 +27,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +63,7 @@ import com.picmorrow.ui.theme.DarkSurfaceRaised
 import com.picmorrow.ui.theme.LightBorder
 import com.picmorrow.ui.theme.LightSecondaryText
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.picmorrow.ui.theme.isPicmorrowDarkTheme
 
 @Composable
 internal fun SettingsScreen(
@@ -70,9 +74,9 @@ internal fun SettingsScreen(
     onNotificationClick: () -> Unit,
     onAddCameraShortcutClick: () -> Unit,
     modifier: Modifier = Modifier,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isPicmorrowDarkTheme(),
 ) {
-    var showThemeDialog by remember { mutableStateOf(false) }
+    var showThemeSheet by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
     var showPrivacyDialog by remember { mutableStateOf(false) }
     val colors = settingsColors(darkTheme)
@@ -97,7 +101,7 @@ internal fun SettingsScreen(
                     title = stringResource(R.string.settings_theme),
                     value = stringResource(uiState.selectedThemeMode.labelRes),
                     colors = colors,
-                    onClick = { showThemeDialog = true },
+                    onClick = { showThemeSheet = true },
                 )
 
                 Spacer(Modifier.height(26.dp))
@@ -154,13 +158,13 @@ internal fun SettingsScreen(
         }
     }
 
-    if (showThemeDialog) {
-        ThemeDialog(
+    if (showThemeSheet) {
+        ThemeBottomSheet(
             selectedMode = uiState.selectedThemeMode,
-            onDismiss = { showThemeDialog = false },
+            onDismiss = { showThemeSheet = false },
             onSelected = {
                 onThemeModeSelected(it)
-                showThemeDialog = false
+                showThemeSheet = false
             },
         )
     }
@@ -305,41 +309,69 @@ private fun StorageNotice(colors: SettingsColors) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ThemeDialog(
+internal fun ThemeBottomSheet(
     selectedMode: AppThemeMode,
     onDismiss: () -> Unit,
     onSelected: (AppThemeMode) -> Unit,
 ) {
-    AlertDialog(
+    ModalBottomSheet(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.settings_theme)) },
-        text = {
-            Column(Modifier.selectableGroup()) {
-                AppThemeMode.entries.forEach { mode ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = selectedMode == mode,
-                                onClick = { onSelected(mode) },
-                                role = Role.RadioButton,
-                            )
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        RadioButton(selected = selectedMode == mode, onClick = null)
-                        Spacer(Modifier.width(12.dp))
-                        Text(stringResource(mode.labelRes))
-                    }
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
+        ThemeSheetContent(selectedMode = selectedMode, onSelected = onSelected)
+    }
+}
+
+@Composable
+internal fun ThemeSheetContent(
+    selectedMode: AppThemeMode,
+    onSelected: (AppThemeMode) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectableGroup()
+            .navigationBarsPadding()
+            .padding(start = 24.dp, end = 24.dp, bottom = 20.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.settings_theme),
+            fontSize = 22.sp,
+            lineHeight = 28.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(Modifier.height(12.dp))
+        ThemeOptions.forEach { mode ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .selectable(
+                        selected = selectedMode == mode,
+                        onClick = { onSelected(mode) },
+                        role = Role.RadioButton,
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(mode.labelRes),
+                    modifier = Modifier.weight(1f),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+                if (selectedMode == mode) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
                 }
             }
-        },
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.settings_cancel)) }
-        },
-    )
+        }
+    }
 }
 
 @Composable
@@ -413,3 +445,4 @@ private fun SettingsScreenPreview() {
 private val AllowedGreen = Color(0xFF18AF7A)
 private val NoticeBorder = Color(0xFFF0B800)
 private val NoticeText = Color(0xFFC75A00)
+private val ThemeOptions = listOf(AppThemeMode.System, AppThemeMode.Dark, AppThemeMode.Light)

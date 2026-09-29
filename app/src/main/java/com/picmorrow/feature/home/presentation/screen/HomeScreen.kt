@@ -5,7 +5,6 @@ package com.picmorrow.feature.home.presentation.screen
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +53,7 @@ import com.picmorrow.feature.home.presentation.model.homeColors
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.picmorrow.ui.theme.isPicmorrowDarkTheme
 
 @Composable
 @Suppress("LongParameterList")
@@ -61,7 +61,7 @@ internal fun HomeScreen(
     onTakePhotoClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isPicmorrowDarkTheme(),
     contentState: HomeContentState = HomeContentState(),
     onCompleteClick: (Long) -> Unit = {},
     onTaskClick: (Long) -> Unit = {},

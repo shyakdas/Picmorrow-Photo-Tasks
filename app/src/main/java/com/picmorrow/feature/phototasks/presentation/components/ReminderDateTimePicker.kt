@@ -3,7 +3,6 @@ package com.picmorrow.feature.phototasks.presentation.components
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.res.Configuration
 import android.text.format.DateFormat
 import android.widget.Toast
 import com.picmorrow.R
@@ -14,10 +13,9 @@ import java.time.ZonedDateTime
 internal fun showReminderDateTimePicker(
     context: Context,
     currentReminderMillis: Long?,
+    darkTheme: Boolean,
     onSelected: (Long) -> Unit,
 ) {
-    val darkTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
-        Configuration.UI_MODE_NIGHT_YES
     val pickerTheme =
         if (darkTheme) R.style.Theme_Picmorrow_ReminderPicker_Dark else R.style.Theme_Picmorrow_ReminderPicker_Light
     val now = ZonedDateTime.now()

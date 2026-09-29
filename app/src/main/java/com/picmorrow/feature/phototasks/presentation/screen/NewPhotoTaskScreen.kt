@@ -3,7 +3,6 @@
 package com.picmorrow.feature.phototasks.presentation.screen
 
 import android.content.res.Configuration
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,6 +41,7 @@ import com.picmorrow.feature.phototasks.presentation.components.showReminderDate
 import com.picmorrow.feature.phototasks.domain.model.PhotoTaskDraft
 import com.picmorrow.feature.phototasks.presentation.model.PhotoTaskSaveUiState
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.picmorrow.ui.theme.isPicmorrowDarkTheme
 
 @Suppress("LongMethod", "LongParameterList")
 @Composable
@@ -52,7 +52,7 @@ internal fun NewPhotoTaskScreen(
     onRetakeClick: () -> Unit,
     onSaveClick: (PhotoTaskDraft) -> Unit,
     modifier: Modifier = Modifier,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isPicmorrowDarkTheme(),
     saveState: PhotoTaskSaveUiState = PhotoTaskSaveUiState(),
     onFormChanged: () -> Unit = {},
 ) {
@@ -196,7 +196,7 @@ internal fun NewPhotoTaskScreen(
             },
             onChooseCustom = {
                 showReminderSheet = false
-                showReminderDateTimePicker(context, reminderAtMillis) {
+                showReminderDateTimePicker(context, reminderAtMillis, darkTheme) {
                     reminderAtMillis = it
                     onFormChanged()
                 }
