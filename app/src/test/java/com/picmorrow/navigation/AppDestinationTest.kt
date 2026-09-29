@@ -13,6 +13,7 @@ class AppDestinationTest {
     fun routes_areCorrect() {
         assertEquals("welcome", AppDestination.Welcome.route)
         assertEquals("home", AppDestination.Home.route)
+        assertEquals("settings", AppDestination.Settings.route)
         assertEquals("camera", AppDestination.Camera.route)
         assertEquals("task-detail/{taskId}", AppDestination.TaskDetails.route)
         assertEquals("task-detail/42", AppDestination.TaskDetails.route(42))

@@ -15,6 +15,7 @@ import com.picmorrow.feature.camera.presentation.screen.CameraRoute
 import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
 import com.picmorrow.feature.home.presentation.screen.HomeRoute
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskRoute
+import com.picmorrow.feature.settings.presentation.screen.SettingsRoute
 import com.picmorrow.feature.taskdetails.presentation.screen.TaskDetailsRoute
 
 @Composable
@@ -48,7 +49,9 @@ fun PicmorrowNavHost(
                 onTakePhotoClick = {
                     navController.navigate(AppDestination.Camera.route)
                 },
-                onSettingsClick = {},
+                onSettingsClick = {
+                    navController.navigate(AppDestination.Settings.route)
+                },
                 onTaskClick = { taskId ->
                     navController.navigate(AppDestination.TaskDetails.route(taskId))
                 },
@@ -69,6 +72,10 @@ fun PicmorrowNavHost(
                     )
                 },
             )
+        }
+
+        composable(AppDestination.Settings.route) {
+            SettingsRoute(onBackClick = navController::navigateUp)
         }
 
         newPhotoTaskDestination(navController)
