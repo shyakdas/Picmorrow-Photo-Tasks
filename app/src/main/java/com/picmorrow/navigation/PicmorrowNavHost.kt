@@ -10,12 +10,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.camera.presentation.screen.CameraRoute
-import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
 import com.picmorrow.feature.home.presentation.screen.HomeRoute
+import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskRoute
-import com.picmorrow.feature.phototasks.presentation.screen.TaskDetailsRoute
+import com.picmorrow.feature.settings.presentation.screen.AboutScreen
+import com.picmorrow.feature.settings.presentation.screen.PrivacyPolicyScreen
+import com.picmorrow.feature.settings.presentation.screen.SettingsRoute
+import com.picmorrow.feature.taskdetails.presentation.screen.TaskDetailsRoute
 
 @Composable
 fun PicmorrowNavHost(
@@ -48,7 +51,9 @@ fun PicmorrowNavHost(
                 onTakePhotoClick = {
                     navController.navigate(AppDestination.Camera.route)
                 },
-                onSettingsClick = {},
+                onSettingsClick = {
+                    navController.navigate(AppDestination.Settings.route)
+                },
                 onTaskClick = { taskId ->
                     navController.navigate(AppDestination.TaskDetails.route(taskId))
                 },
@@ -71,8 +76,29 @@ fun PicmorrowNavHost(
             )
         }
 
+        settingsDestinations(navController)
+
         newPhotoTaskDestination(navController)
         taskDetailsDestination(navController)
+    }
+}
+
+private fun NavGraphBuilder.settingsDestinations(navController: NavHostController) {
+    composable(AppDestination.Settings.route) {
+        SettingsRoute(
+            onBackClick = navController::navigateUp,
+            onAboutClick = { navController.navigate(AppDestination.About.route) },
+            onPrivacyPolicyClick = { navController.navigate(AppDestination.PrivacyPolicy.route) },
+        )
+    }
+    composable(AppDestination.About.route) {
+        AboutScreen(
+            onBackClick = navController::navigateUp,
+            onPrivacyPolicyClick = { navController.navigate(AppDestination.PrivacyPolicy.route) },
+        )
+    }
+    composable(AppDestination.PrivacyPolicy.route) {
+        PrivacyPolicyScreen(onBackClick = navController::navigateUp)
     }
 }
 
@@ -87,7 +113,6 @@ private fun NavGraphBuilder.taskDetailsDestination(navController: NavHostControl
         TaskDetailsRoute(
             taskId = taskId,
             onBackClick = navController::navigateUp,
-            onEditClick = {},
         )
     }
 }

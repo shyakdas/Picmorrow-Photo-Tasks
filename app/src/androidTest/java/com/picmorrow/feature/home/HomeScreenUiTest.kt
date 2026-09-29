@@ -11,10 +11,11 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.picmorrow.core.common.AppDateFormat
+import com.picmorrow.core.common.formatDate
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 import com.picmorrow.feature.home.presentation.model.HomeContentState
 import com.picmorrow.feature.home.presentation.screen.HomeScreen
-import com.picmorrow.feature.phototasks.presentation.common.components.formatCompletionDate
 import com.picmorrow.ui.theme.PicmorrowTheme
 import org.junit.Rule
 import org.junit.Test
@@ -95,7 +96,9 @@ class HomeScreenUiTest {
         composeRule.onNodeWithText(string(R.string.filter_all)).performClick()
         composeRule.onNodeWithText(string(R.string.active_completed_tab)).performClick()
         composeRule.onNodeWithText("Pick up parcel").assertIsDisplayed()
-        composeRule.onNodeWithText("Completed ${formatCompletionDate(completedAt)}").assertIsDisplayed()
+        composeRule
+            .onNodeWithText("Completed ${formatDate(completedAt, AppDateFormat.DayMonth)}")
+            .assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.filter_all)).assertDoesNotExist()
         composeRule.onNodeWithContentDescription(string(R.string.active_camera_content_description)).assertDoesNotExist()
     }
@@ -108,7 +111,7 @@ class HomeScreenUiTest {
 
         composeRule.onNodeWithText(string(R.string.completed_empty_title)).assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.completed_empty_body)).assertIsDisplayed()
-        composeRule.onNodeWithText(string(R.string.active_take_photo)).assertHasClickAction()
+        composeRule.onNodeWithText(string(R.string.completed_empty_storage_note)).assertIsDisplayed()
     }
 
     private fun showHome(

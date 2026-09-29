@@ -38,6 +38,14 @@ class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
         dao.complete(id, completedAtMillis)
     }
 
+    override suspend fun complete(id: Long, completedAtMillis: Long, isSavedToGallery: Boolean) {
+        dao.complete(id, completedAtMillis, isSavedToGallery)
+    }
+
+    override suspend fun delete(id: Long) {
+        dao.delete(id)
+    }
+
     override suspend fun hasPhotoTasks(): Boolean = dao.hasTasks()
 
     override suspend fun findById(id: Long): PhotoTask? = dao.findById(id)?.toDomain()
@@ -51,5 +59,6 @@ class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
         reminderAtMillis = reminderAtMillis,
         completedAtMillis = completedAtMillis,
         capturedAtMillis = capturedAtMillis,
+        isSavedToGallery = isSavedToGallery,
     )
 }

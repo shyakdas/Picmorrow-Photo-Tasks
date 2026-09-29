@@ -22,6 +22,15 @@ interface PhotoTaskDao {
     @Query("SELECT * FROM photo_tasks WHERE completedAtMillis IS NOT NULL ORDER BY completedAtMillis DESC")
     fun observeCompleted(): Flow<List<PhotoTaskEntity>>
 
-    @Query("UPDATE photo_tasks SET completedAtMillis = :completedAtMillis WHERE id = :id AND completedAtMillis IS NULL")
-    suspend fun complete(id: Long, completedAtMillis: Long): Int
+    @Query(
+        """
+        UPDATE photo_tasks
+        SET completedAtMillis = :completedAtMillis, isSavedToGallery = :isSavedToGallery
+        WHERE id = :id AND completedAtMillis IS NULL
+        """,
+    )
+    suspend fun complete(id: Long, completedAtMillis: Long, isSavedToGallery: Boolean = false): Int
+
+    @Query("DELETE FROM photo_tasks WHERE id = :id")
+    suspend fun delete(id: Long): Int
 }

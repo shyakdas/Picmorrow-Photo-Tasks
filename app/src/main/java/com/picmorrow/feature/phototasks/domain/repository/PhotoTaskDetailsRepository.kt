@@ -5,5 +5,7 @@ import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 interface PhotoTaskDetailsRepository {
     suspend fun findById(id: Long): PhotoTask?
 
-    suspend fun complete(id: Long, completedAtMillis: Long)
+    suspend fun complete(id: Long, completedAtMillis: Long, isSavedToGallery: Boolean)
+
+    suspend fun delete(id: Long)
 }

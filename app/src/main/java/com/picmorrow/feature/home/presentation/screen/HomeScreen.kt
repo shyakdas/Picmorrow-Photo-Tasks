@@ -5,7 +5,6 @@ package com.picmorrow.feature.home.presentation.screen
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,6 +53,7 @@ import com.picmorrow.feature.home.presentation.model.homeColors
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.picmorrow.ui.theme.isPicmorrowDarkTheme
 
 @Composable
 @Suppress("LongParameterList")
@@ -58,7 +61,7 @@ internal fun HomeScreen(
     onTakePhotoClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isPicmorrowDarkTheme(),
     contentState: HomeContentState = HomeContentState(),
     onCompleteClick: (Long) -> Unit = {},
     onTaskClick: (Long) -> Unit = {},
@@ -163,7 +166,6 @@ private fun HomeContent(
                         tasks = contentState.completedTasks,
                         colors = colors.taskList,
                         darkTheme = darkTheme,
-                        onTakePhotoClick = onTakePhotoClick,
                         onTaskClick = onTaskClick,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -197,7 +199,7 @@ private fun HomeTopBar(
 
         IconButton(onClick = onSettingsClick, modifier = Modifier.size(SETTINGS_BUTTON_SIZE)) {
             Icon(
-                painter = painterResource(R.drawable.ic_settings_gear),
+                imageVector = Icons.Filled.Settings,
                 contentDescription = stringResource(R.string.active_settings_content_description),
                 modifier = Modifier.size(SETTINGS_ICON_SIZE),
                 tint = iconTint,
@@ -303,7 +305,7 @@ private fun HomeCameraFab(
         shape = RoundedCornerShape(FAB_CORNER_RADIUS),
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_fab_aperture),
+            imageVector = Icons.Filled.CameraAlt,
             contentDescription = stringResource(R.string.active_camera_content_description),
             modifier = Modifier.size(FAB_ICON_SIZE),
         )

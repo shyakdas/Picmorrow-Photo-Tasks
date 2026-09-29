@@ -5,12 +5,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.data.local.PhotoTaskEntity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import kotlinx.coroutines.flow.first
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -60,6 +60,7 @@ class PhotoTaskDatabaseTest {
             assertEquals(listOf(id), dao.observeCompleted().first().map { it.id })
             assertEquals(0, dao.complete(id, 5678L))
             assertEquals(1234L, dao.findById(id)?.completedAtMillis)
+            assertFalse(dao.findById(id)?.isSavedToGallery ?: true)
         } finally {
             database.close()
         }
@@ -105,6 +106,7 @@ class PhotoTaskDatabaseTest {
             assertEquals("Find car", saved.title)
             assertNull(saved.completedAtMillis)
             assertEquals(0L, saved.capturedAtMillis)
+            assertFalse(saved.isSavedToGallery)
         } finally {
             database.close()
             context.deleteDatabase(databaseName)
