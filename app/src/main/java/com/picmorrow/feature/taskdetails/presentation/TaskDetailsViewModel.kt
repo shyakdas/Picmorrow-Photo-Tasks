@@ -33,7 +33,7 @@ internal class TaskDetailsViewModel(
 
     fun deletePhotoAndTask() {
         val content = _uiState.value as? TaskDetailsUiState.Content ?: return
-        if (content.task.completedAtMillis != null || content.isCompleting) return
+        if (content.isCompleting) return
 
         _uiState.value = content.copy(isCompleting = true)
         viewModelScope.launch {

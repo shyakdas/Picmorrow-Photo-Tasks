@@ -116,6 +116,23 @@ class TaskDetailsViewModelTest {
     }
 
     @Test
+    fun deletingGallerySavedCompletedTaskKeepsGalleryExportUntouched() = runTest(dispatcher) {
+        val completedTask = task().copy(completedAtMillis = 8_000L, isSavedToGallery = true)
+        val repository = FakeDetailsRepository(completedTask)
+        val storage = FakePhotoStorage()
+        val viewModel = viewModel(repository, storage)
+        advanceUntilIdle()
+
+        viewModel.deletePhotoAndTask()
+        advanceUntilIdle()
+
+        assertEquals(7L, repository.deletedId)
+        assertEquals("/photo.jpg", storage.deletedPath)
+        assertNull(storage.savedPath)
+        assertEquals(TaskDetailsUiState.Deleted, viewModel.uiState.value)
+    }
+
+    @Test
     fun completionFailureRestoresActiveContent() = runTest(dispatcher) {
         val repository = FakeDetailsRepository(task(), failCompletion = true)
         val viewModel = viewModel(repository)

@@ -81,6 +81,7 @@ internal fun TaskDetailsScreen(
                 task = uiState.task,
                 isCompleting = uiState.isCompleting,
                 onBackClick = onBackClick,
+                onDeleteClick = onDeletePhotoAndTaskClick,
                 onMarkDoneClick = { showCompletionSheet = true },
                 darkTheme = darkTheme,
             )
@@ -170,6 +171,7 @@ private fun TaskDetailsContent(
     task: PhotoTask,
     isCompleting: Boolean,
     onBackClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     onMarkDoneClick: () -> Unit,
     darkTheme: Boolean,
 ) {
@@ -184,7 +186,12 @@ private fun TaskDetailsContent(
             .statusBarsPadding()
             .navigationBarsPadding(),
     ) {
-        TaskDetailsTopBar(onBackClick)
+        TaskDetailsTopBar(
+            onBackClick = onBackClick,
+            showDeleteAction = !active,
+            deleteActionEnabled = !isCompleting,
+            onDeleteClick = onDeleteClick,
+        )
         Column(
             modifier = Modifier
                 .weight(1f)

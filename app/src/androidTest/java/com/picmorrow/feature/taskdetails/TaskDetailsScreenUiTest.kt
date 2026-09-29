@@ -41,11 +41,17 @@ class TaskDetailsScreenUiTest {
     }
 
     @Test
-    fun completedTaskIsReadOnly() {
-        showTask(task = task().copy(completedAtMillis = CAPTURED_AT + 1_000L))
+    fun completedTaskCanBeDeleted() {
+        var deleteClicked = false
+        showTask(
+            task = task().copy(completedAtMillis = CAPTURED_AT + 1_000L),
+            onDelete = { deleteClicked = true },
+        )
 
         composeRule.onNodeWithText("Mark done").assertDoesNotExist()
         composeRule.onNodeWithText("Completed 8 Sep 2025").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Delete task").performClick()
+        assertTrue(deleteClicked)
     }
 
     @Test
@@ -65,6 +71,7 @@ class TaskDetailsScreenUiTest {
     private fun showTask(
         task: PhotoTask = task(),
         onBack: () -> Unit = {},
+        onDelete: () -> Unit = {},
         onReviewLater: () -> Unit = {},
     ) {
         composeRule.setContent {
@@ -73,7 +80,7 @@ class TaskDetailsScreenUiTest {
                     TaskDetailsUiState.Content(task),
                     onBack,
                     {},
-                    {},
+                    onDelete,
                     onReviewLater,
                     darkTheme = false,
                 )

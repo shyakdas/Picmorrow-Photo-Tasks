@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +33,9 @@ import com.picmorrow.ui.theme.PicmorrowTheme
 internal fun TaskDetailsTopBar(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showDeleteAction: Boolean = false,
+    deleteActionEnabled: Boolean = true,
+    onDeleteClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -44,7 +49,17 @@ internal fun TaskDetailsTopBar(
             Icon(painterResource(R.drawable.ic_arrow_back), stringResource(R.string.task_details_back))
         }
         Text(stringResource(R.string.task_details_title), fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.size(48.dp))
+        if (showDeleteAction) {
+            IconButton(onClick = onDeleteClick, enabled = deleteActionEnabled) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = stringResource(R.string.task_details_delete),
+                    tint = MaterialTheme.colorScheme.error,
+                )
+            }
+        } else {
+            Spacer(Modifier.size(48.dp))
+        }
     }
 }
 
@@ -56,7 +71,7 @@ private fun TaskDetailsTopBarPreview() {
     val darkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     PicmorrowTheme(darkTheme) {
         Surface(color = MaterialTheme.colorScheme.background) {
-            TaskDetailsTopBar(onBackClick = {})
+            TaskDetailsTopBar(onBackClick = {}, showDeleteAction = true)
         }
     }
 }

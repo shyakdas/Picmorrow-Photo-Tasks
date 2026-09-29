@@ -57,6 +57,7 @@
     <string name="new_photo_task_save_failed">Could not save this task. Please try again.</string>
     <string name="task_details_title">Task details</string>
     <string name="task_details_back">Back</string>
+    <string name="task_details_delete">Delete task</string>
     <string name="task_details_captured">Captured %1$s</string>
     <string name="task_details_completed">Completed %1$s</string>
     <string name="task_details_notes">NOTES</string>
