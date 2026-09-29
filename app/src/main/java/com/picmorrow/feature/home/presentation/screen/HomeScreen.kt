@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -197,7 +199,7 @@ private fun HomeTopBar(
 
         IconButton(onClick = onSettingsClick, modifier = Modifier.size(SETTINGS_BUTTON_SIZE)) {
             Icon(
-                painter = painterResource(R.drawable.ic_settings_gear),
+                imageVector = Icons.Filled.Settings,
                 contentDescription = stringResource(R.string.active_settings_content_description),
                 modifier = Modifier.size(SETTINGS_ICON_SIZE),
                 tint = iconTint,
