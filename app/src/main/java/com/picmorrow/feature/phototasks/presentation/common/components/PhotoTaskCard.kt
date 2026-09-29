@@ -33,15 +33,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.picmorrow.R
+import com.picmorrow.core.common.AppDateFormat
+import com.picmorrow.core.common.formatDate
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskListColors
 import com.picmorrow.feature.phototasks.presentation.common.model.photoTaskListColors
 import com.picmorrow.ui.theme.PicmorrowTheme
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 @Suppress("LongParameterList")
@@ -127,7 +125,10 @@ private fun PhotoTaskCardDetails(
                 if (category != null) CategoryBadge(category = category, darkTheme = darkTheme)
                 task.completedAtMillis?.let { completedAt ->
                     Text(
-                        text = stringResource(R.string.task_completed_on, formatCompletionDate(completedAt)),
+                        text = stringResource(
+                            R.string.task_completed_on,
+                            formatDate(completedAt, AppDateFormat.DayMonth),
+                        ),
                         color = colors.secondaryText,
                         modifier = Modifier.padding(top = 4.dp),
                         fontSize = 13.sp,
@@ -160,13 +161,6 @@ internal fun CategoryBadge(category: PhotoTaskCategory, darkTheme: Boolean) {
         }
     }
 }
-
-internal fun formatCompletionDate(
-    completedAtMillis: Long,
-    zoneId: ZoneId = ZoneId.systemDefault(),
-    locale: Locale = Locale.getDefault(),
-): String = DateTimeFormatter.ofPattern("d MMM", locale)
-    .format(Instant.ofEpochMilli(completedAtMillis).atZone(zoneId))
 
 @Preview(name = "Photo task card - Light", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Preview(name = "Photo task card - Dark", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

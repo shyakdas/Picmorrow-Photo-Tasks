@@ -1,13 +1,12 @@
 @file:Suppress("MagicNumber", "LongMethod")
 
-package com.picmorrow.feature.phototasks.presentation.screen
+package com.picmorrow.feature.taskdetails.presentation.screen
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,10 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,55 +33,136 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.picmorrow.R
+import com.picmorrow.core.common.AppDateFormat
+import com.picmorrow.core.common.formatDate
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 import com.picmorrow.feature.phototasks.presentation.common.components.CapturedPhotoImage
 import com.picmorrow.feature.phototasks.presentation.common.components.CategoryBadge
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
-import com.picmorrow.feature.phototasks.presentation.model.TaskDetailsUiState
+import com.picmorrow.feature.taskdetails.presentation.components.TaskCompletionBottomSheet
+import com.picmorrow.feature.taskdetails.presentation.components.TaskDetailsTopBar
+import com.picmorrow.feature.taskdetails.presentation.components.TaskNotFound
+import com.picmorrow.feature.taskdetails.presentation.model.TaskDetailsUiState
 import com.picmorrow.ui.theme.DarkBorder
 import com.picmorrow.ui.theme.DarkSecondaryText
 import com.picmorrow.ui.theme.DarkSurfaceRaised
 import com.picmorrow.ui.theme.LightBorder
-import com.picmorrow.ui.theme.LightSecondaryText
 import com.picmorrow.ui.theme.LightNavigationBar
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import com.picmorrow.ui.theme.LightSecondaryText
+import com.picmorrow.ui.theme.PicmorrowTheme
 
 @Composable
 @Suppress("LongParameterList")
 internal fun TaskDetailsScreen(
     uiState: TaskDetailsUiState,
     onBackClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onMarkDoneClick: () -> Unit,
+    onSaveToGalleryClick: () -> Unit,
+    onDeletePhotoAndTaskClick: () -> Unit,
+    onReviewLaterClick: () -> Unit,
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
 ) {
+    var showCompletionSheet by rememberSaveable { mutableStateOf(false) }
+
     Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         when (uiState) {
             TaskDetailsUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
             TaskDetailsUiState.NotFound -> TaskNotFound(onBackClick)
+            TaskDetailsUiState.Deleted -> Unit
             is TaskDetailsUiState.Content -> TaskDetailsContent(
                 task = uiState.task,
                 isCompleting = uiState.isCompleting,
                 onBackClick = onBackClick,
-                onEditClick = onEditClick,
-                onMarkDoneClick = onMarkDoneClick,
+                onMarkDoneClick = { showCompletionSheet = true },
                 darkTheme = darkTheme,
             )
         }
     }
+
+    val content = uiState as? TaskDetailsUiState.Content
+    if (showCompletionSheet && content != null && content.task.completedAtMillis == null) {
+        TaskCompletionBottomSheet(
+            isProcessing = content.isCompleting,
+            darkTheme = darkTheme,
+            onDismiss = { showCompletionSheet = false },
+            onSaveToGallery = onSaveToGalleryClick,
+            onDeletePhotoAndTask = onDeletePhotoAndTaskClick,
+            onReviewLater = onReviewLaterClick,
+        )
+    }
 }
+
+@Preview(
+    name = "Task Details - Light",
+    showBackground = true,
+    showSystemUi = true,
+    widthDp = TASK_DETAILS_PREVIEW_WIDTH,
+    heightDp = TASK_DETAILS_PREVIEW_HEIGHT,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+)
+@Composable
+@Suppress("UnusedPrivateMember")
+private fun TaskDetailsScreenLightPreview() {
+    PicmorrowTheme(darkTheme = false) {
+        TaskDetailsScreen(
+            uiState = TaskDetailsUiState.Content(previewTask),
+            onBackClick = {},
+            onSaveToGalleryClick = {},
+            onDeletePhotoAndTaskClick = {},
+            onReviewLaterClick = {},
+            darkTheme = false,
+        )
+    }
+}
+
+@Preview(
+    name = "Task Details - Dark",
+    showBackground = true,
+    showSystemUi = true,
+    widthDp = TASK_DETAILS_PREVIEW_WIDTH,
+    heightDp = TASK_DETAILS_PREVIEW_HEIGHT,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Composable
+@Suppress("UnusedPrivateMember")
+private fun TaskDetailsScreenDarkPreview() {
+    PicmorrowTheme(darkTheme = true) {
+        TaskDetailsScreen(
+            uiState = TaskDetailsUiState.Content(
+                previewTask.copy(completedAtMillis = PREVIEW_CAPTURED_AT + ONE_DAY_MILLIS),
+            ),
+            onBackClick = {},
+            onSaveToGalleryClick = {},
+            onDeletePhotoAndTaskClick = {},
+            onReviewLaterClick = {},
+            darkTheme = true,
+        )
+    }
+}
+
+private const val TASK_DETAILS_PREVIEW_WIDTH = 393
+private const val TASK_DETAILS_PREVIEW_HEIGHT = 852
+private const val ONE_DAY_MILLIS = 86_400_000L
+private const val PREVIEW_CAPTURED_AT = 1_757_324_800_000L
+
+private val previewTask = PhotoTask(
+    id = 1,
+    photoPath = "",
+    category = "Parking",
+    title = "Car - B2, pillar C14",
+    notes = "Near the lift",
+    reminderAtMillis = null,
+    completedAtMillis = null,
+    capturedAtMillis = PREVIEW_CAPTURED_AT,
+)
 
 @Composable
 @Suppress("LongParameterList")
@@ -95,7 +170,6 @@ private fun TaskDetailsContent(
     task: PhotoTask,
     isCompleting: Boolean,
     onBackClick: () -> Unit,
-    onEditClick: () -> Unit,
     onMarkDoneClick: () -> Unit,
     darkTheme: Boolean,
 ) {
@@ -108,14 +182,14 @@ private fun TaskDetailsContent(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(horizontal = 24.dp),
+            .navigationBarsPadding(),
     ) {
-        TaskDetailsTopBar(active, onBackClick, onEditClick)
+        TaskDetailsTopBar(onBackClick)
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
         ) {
             CapturedPhotoImage(
                 photoPath = task.photoPath,
@@ -133,7 +207,10 @@ private fun TaskDetailsContent(
             if (task.capturedAtMillis > 0) {
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    stringResource(R.string.task_details_captured, formatCapturedDate(task.capturedAtMillis)),
+                    stringResource(
+                        R.string.task_details_captured,
+                        formatDate(task.capturedAtMillis, AppDateFormat.DayMonthYear),
+                    ),
                     color = secondary,
                     fontSize = 15.sp,
                 )
@@ -161,7 +238,10 @@ private fun TaskDetailsContent(
             task.completedAtMillis?.let {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    stringResource(R.string.task_details_completed, formatCapturedDate(it)),
+                    stringResource(
+                        R.string.task_details_completed,
+                        formatDate(it, AppDateFormat.DayMonthYear),
+                    ),
                     color = secondary,
                     fontSize = 15.sp,
                 )
@@ -172,7 +252,10 @@ private fun TaskDetailsContent(
             Button(
                 onClick = onMarkDoneClick,
                 enabled = !isCompleting,
-                modifier = Modifier.fillMaxWidth().height(58.dp),
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth()
+                    .height(48.dp),
                 shape = RoundedCornerShape(28.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
@@ -187,57 +270,3 @@ private fun TaskDetailsContent(
         }
     }
 }
-
-@Composable
-private fun TaskDetailsTopBar(active: Boolean, onBackClick: () -> Unit, onEditClick: () -> Unit) {
-    var menuExpanded by rememberSaveable { mutableStateOf(false) }
-    Row(
-        modifier = Modifier.fillMaxWidth().height(72.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        IconButton(onClick = onBackClick) {
-            Icon(painterResource(R.drawable.ic_arrow_back), stringResource(R.string.task_details_back))
-        }
-        Text(stringResource(R.string.task_details_title), fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Box {
-            if (active) {
-                IconButton(onClick = { menuExpanded = true }) {
-                    Icon(painterResource(R.drawable.ic_more_horizontal), stringResource(R.string.task_details_more))
-                }
-                DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.task_details_edit)) },
-                        leadingIcon = { Icon(painterResource(R.drawable.ic_edit), contentDescription = null) },
-                        onClick = {
-                            menuExpanded = false
-                            onEditClick()
-                        },
-                    )
-                }
-            } else {
-                Spacer(Modifier.size(48.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun TaskNotFound(onBackClick: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize().statusBarsPadding().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        TaskDetailsTopBar(active = false, onBackClick = onBackClick, onEditClick = {})
-        Spacer(Modifier.weight(1f))
-        Text(stringResource(R.string.task_details_not_found), fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-        Spacer(Modifier.weight(1f))
-    }
-}
-
-internal fun formatCapturedDate(
-    timestamp: Long,
-    zoneId: ZoneId = ZoneId.systemDefault(),
-    locale: Locale = Locale.getDefault(),
-): String = DateTimeFormatter.ofPattern("d MMM yyyy", locale)
-    .format(Instant.ofEpochMilli(timestamp).atZone(zoneId))

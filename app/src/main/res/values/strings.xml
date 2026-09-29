@@ -56,12 +56,15 @@
     <string name="new_photo_task_save_failed">Could not save this task. Please try again.</string>
     <string name="task_details_title">Task details</string>
     <string name="task_details_back">Back</string>
-    <string name="task_details_more">More options</string>
-    <string name="task_details_edit">Edit task</string>
     <string name="task_details_captured">Captured %1$s</string>
     <string name="task_details_completed">Completed %1$s</string>
     <string name="task_details_notes">NOTES</string>
     <string name="task_details_mark_done">Mark done</string>
     <string name="task_details_completing">Completing&#8230;</string>
     <string name="task_details_not_found">Task not found</string>
+    <string name="task_completion_title">Task done!</string>
+    <string name="task_completion_subtitle">What about the photo?</string>
+    <string name="task_completion_save_to_gallery">Save to gallery</string>
+    <string name="task_completion_delete_photo_and_task">Delete photo and task</string>
+    <string name="task_completion_review_later">Review later</string>
 </resources>

@@ -71,7 +71,7 @@ class PhotoTaskRepositoryImplTest {
         dao.completed.value = listOf(task.copy(completedAtMillis = 5678L))
         assertEquals(5678L, repository.observeCompleted().first().single().completedAtMillis)
         repository.complete(42, 5678L)
-        assertEquals(42L to 5678L, dao.completedCall)
+        assertEquals(Triple(42L, 5678L, false), dao.completedCall)
         assertEquals(active, repository.findById(42))
     }
 
@@ -100,11 +100,24 @@ class PhotoTaskRepositoryImplTest {
         assertEquals(null, repository.findById(99))
     }
 
+    @Test
+    fun detailsActionsPersistGalleryChoiceAndDeleteTask() = runBlocking {
+        val dao = RecordingDao()
+        val repository = PhotoTaskRepositoryImpl(dao)
+
+        repository.complete(42, 5678L, isSavedToGallery = true)
+        repository.delete(42)
+
+        assertEquals(Triple(42L, 5678L, true), dao.completedCall)
+        assertEquals(42L, dao.deletedId)
+    }
+
     private class RecordingDao : PhotoTaskDao {
         var inserted: PhotoTaskEntity? = null
         val active = MutableStateFlow<List<PhotoTaskEntity>>(emptyList())
         val completed = MutableStateFlow<List<PhotoTaskEntity>>(emptyList())
-        var completedCall: Pair<Long, Long>? = null
+        var completedCall: Triple<Long, Long, Boolean>? = null
+        var deletedId: Long? = null
 
         override suspend fun insert(task: PhotoTaskEntity): Long {
             inserted = task
@@ -119,8 +132,13 @@ class PhotoTaskRepositoryImplTest {
 
         override fun observeCompleted(): Flow<List<PhotoTaskEntity>> = completed
 
-        override suspend fun complete(id: Long, completedAtMillis: Long): Int {
-            completedCall = id to completedAtMillis
+        override suspend fun complete(id: Long, completedAtMillis: Long, isSavedToGallery: Boolean): Int {
+            completedCall = Triple(id, completedAtMillis, isSavedToGallery)
+            return 1
+        }
+
+        override suspend fun delete(id: Long): Int {
+            deletedId = id
             return 1
         }
     }

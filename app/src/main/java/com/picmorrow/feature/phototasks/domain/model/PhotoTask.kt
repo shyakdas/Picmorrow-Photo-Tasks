@@ -9,4 +9,5 @@ data class PhotoTask(
     val reminderAtMillis: Long?,
     val completedAtMillis: Long?,
     val capturedAtMillis: Long = 0,
+    val isSavedToGallery: Boolean = false,
 )

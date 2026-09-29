@@ -1,10 +1,10 @@
-package com.picmorrow.feature.phototasks
+package com.picmorrow.feature.taskdetails
 
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
-import com.picmorrow.feature.phototasks.presentation.model.TaskDetailsUiState
-import com.picmorrow.feature.phototasks.presentation.screen.TaskDetailsScreen
+import com.picmorrow.feature.taskdetails.presentation.model.TaskDetailsUiState
+import com.picmorrow.feature.taskdetails.presentation.screen.TaskDetailsScreen
 import com.picmorrow.ui.theme.PicmorrowTheme
 import java.time.Instant
 import org.junit.Rule
@@ -35,7 +35,7 @@ class TaskDetailsScreenScreenshotTest {
         )
         paparazzi.snapshot {
             PicmorrowTheme(darkTheme) {
-                TaskDetailsScreen(TaskDetailsUiState.Content(task), {}, {}, {}, darkTheme = darkTheme)
+                TaskDetailsScreen(TaskDetailsUiState.Content(task), {}, {}, {}, {}, darkTheme = darkTheme)
             }
         }
     }

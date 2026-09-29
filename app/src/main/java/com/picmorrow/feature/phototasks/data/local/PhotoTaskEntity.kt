@@ -14,4 +14,5 @@ data class PhotoTaskEntity(
     val reminderAtMillis: Long?,
     val completedAtMillis: Long? = null,
     @ColumnInfo(defaultValue = "0") val capturedAtMillis: Long = System.currentTimeMillis(),
+    @ColumnInfo(defaultValue = "0") val isSavedToGallery: Boolean = false,
 )

@@ -15,7 +15,7 @@ import com.picmorrow.feature.camera.presentation.screen.CameraRoute
 import com.picmorrow.feature.onboarding.presentation.screen.WelcomeRoute
 import com.picmorrow.feature.home.presentation.screen.HomeRoute
 import com.picmorrow.feature.phototasks.presentation.screen.NewPhotoTaskRoute
-import com.picmorrow.feature.phototasks.presentation.screen.TaskDetailsRoute
+import com.picmorrow.feature.taskdetails.presentation.screen.TaskDetailsRoute
 
 @Composable
 fun PicmorrowNavHost(
@@ -87,7 +87,6 @@ private fun NavGraphBuilder.taskDetailsDestination(navController: NavHostControl
         TaskDetailsRoute(
             taskId = taskId,
             onBackClick = navController::navigateUp,
-            onEditClick = {},
         )
     }
 }
