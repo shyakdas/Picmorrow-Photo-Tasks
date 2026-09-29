@@ -51,6 +51,21 @@ class TaskDetailsViewModelTest {
     }
 
     @Test
+    fun actionsWhileTaskIsLoadingAreIgnored() = runTest(dispatcher) {
+        val repository = FakeDetailsRepository(task())
+        val storage = FakePhotoStorage()
+        val viewModel = viewModel(repository, storage)
+
+        viewModel.completeForReview()
+        viewModel.deletePhotoAndTask()
+
+        assertNull(repository.completedCall)
+        assertNull(repository.deletedId)
+        assertNull(storage.savedPath)
+        assertNull(storage.deletedPath)
+    }
+
+    @Test
     fun reviewLaterCompletesWithoutSavingToGallery() = runTest(dispatcher) {
         val repository = FakeDetailsRepository(task())
         val storage = FakePhotoStorage()
@@ -133,6 +148,63 @@ class TaskDetailsViewModelTest {
     }
 
     @Test
+    fun localPhotoDeleteFailureDoesNotRestoreDeletedTask() = runTest(dispatcher) {
+        val repository = FakeDetailsRepository(task())
+        val storage = FakePhotoStorage(deleteError = IllegalStateException("File unavailable"))
+        val viewModel = viewModel(repository, storage)
+        advanceUntilIdle()
+
+        viewModel.deletePhotoAndTask()
+        advanceUntilIdle()
+
+        assertEquals(7L, repository.deletedId)
+        assertEquals(TaskDetailsUiState.Deleted, viewModel.uiState.value)
+    }
+
+    @Test
+    fun repeatedDeleteWhileDeletionIsRunningIsIgnored() = runTest(dispatcher) {
+        val deleteGate = CompletableDeferred<Unit>()
+        val repository = FakeDetailsRepository(task(), deleteGate = deleteGate)
+        val viewModel = viewModel(repository)
+        advanceUntilIdle()
+
+        viewModel.deletePhotoAndTask()
+        dispatcher.scheduler.runCurrent()
+        viewModel.deletePhotoAndTask()
+        assertEquals(1, repository.deleteCalls)
+
+        deleteGate.complete(Unit)
+        advanceUntilIdle()
+        assertEquals(1, repository.deleteCalls)
+    }
+
+    @Test
+    fun repositoryDeleteFailureRestoresTaskContent() = runTest(dispatcher) {
+        val repository = FakeDetailsRepository(task(), deleteError = IllegalStateException("Database unavailable"))
+        val viewModel = viewModel(repository)
+        advanceUntilIdle()
+
+        viewModel.deletePhotoAndTask()
+        advanceUntilIdle()
+
+        assertEquals(task(), (viewModel.uiState.value as TaskDetailsUiState.Content).task)
+        assertFalse((viewModel.uiState.value as TaskDetailsUiState.Content).isCompleting)
+    }
+
+    @Test
+    fun cancellationDuringLocalPhotoDeleteIsPropagated() = runTest(dispatcher) {
+        val repository = FakeDetailsRepository(task())
+        val storage = FakePhotoStorage(deleteError = CancellationException("Cancelled"))
+        val viewModel = viewModel(repository, storage)
+        advanceUntilIdle()
+
+        viewModel.deletePhotoAndTask()
+        advanceUntilIdle()
+
+        assertTrue((viewModel.uiState.value as TaskDetailsUiState.Content).isCompleting)
+    }
+
+    @Test
     fun completionFailureRestoresActiveContent() = runTest(dispatcher) {
         val repository = FakeDetailsRepository(task(), failCompletion = true)
         val viewModel = viewModel(repository)
@@ -199,11 +271,14 @@ class TaskDetailsViewModelTest {
         private val failCompletion: Boolean = false,
         private val completionError: Throwable? = null,
         private val completionGate: CompletableDeferred<Unit>? = null,
+        private val deleteError: Throwable? = null,
+        private val deleteGate: CompletableDeferred<Unit>? = null,
     ) : PhotoTaskDetailsRepository {
         var requestedId: Long? = null
         var completedCall: Triple<Long, Long, Boolean>? = null
         var completionCalls = 0
         var deletedId: Long? = null
+        var deleteCalls = 0
 
         override suspend fun findById(id: Long): PhotoTask? {
             requestedId = id
@@ -219,11 +294,17 @@ class TaskDetailsViewModelTest {
         }
 
         override suspend fun delete(id: Long) {
+            deleteCalls++
+            deleteGate?.await()
+            deleteError?.let { throw it }
             deletedId = id
         }
     }
 
-    private class FakePhotoStorage(private val failSave: Boolean = false) : TaskPhotoStorage {
+    private class FakePhotoStorage(
+        private val failSave: Boolean = false,
+        private val deleteError: Throwable? = null,
+    ) : TaskPhotoStorage {
         var savedPath: String? = null
         var deletedPath: String? = null
 
@@ -233,6 +314,7 @@ class TaskDetailsViewModelTest {
         }
 
         override suspend fun deleteLocalPhoto(photoPath: String) {
+            deleteError?.let { throw it }
             deletedPath = photoPath
         }
     }
