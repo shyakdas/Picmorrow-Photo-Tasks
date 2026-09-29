@@ -166,7 +166,6 @@ private fun HomeContent(
                         tasks = contentState.completedTasks,
                         colors = colors.taskList,
                         darkTheme = darkTheme,
-                        onTakePhotoClick = onTakePhotoClick,
                         onTaskClick = onTaskClick,
                         modifier = Modifier.fillMaxSize(),
                     )

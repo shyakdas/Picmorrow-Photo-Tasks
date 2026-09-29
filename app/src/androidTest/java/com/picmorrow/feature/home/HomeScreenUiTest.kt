@@ -111,6 +111,7 @@ class HomeScreenUiTest {
 
         composeRule.onNodeWithText(string(R.string.completed_empty_title)).assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.completed_empty_body)).assertIsDisplayed()
+        composeRule.onNodeWithText(string(R.string.completed_empty_storage_note)).assertIsDisplayed()
         composeRule.onNodeWithText(string(R.string.active_take_photo)).assertHasClickAction()
     }
 

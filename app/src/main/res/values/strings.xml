@@ -14,8 +14,9 @@
     <string name="active_completed_tab">Completed</string>
     <string name="task_completed_on">Completed %1$s</string>
     <string name="task_saved_to_gallery">Saved to gallery</string>
-    <string name="completed_empty_title">Nothing completed yet</string>
-    <string name="completed_empty_body">Tasks you finish will appear here.</string>
+    <string name="completed_empty_title">Finished tasks will appear\nhere</string>
+    <string name="completed_empty_body">Review their photos before keeping or deleting\nthem.</string>
+    <string name="completed_empty_storage_note">Completed photos still use app storage.</string>
     <string name="active_settings_content_description">Settings</string>
     <string name="active_camera_content_description">Camera</string>
     <string name="task_complete_content_description">Complete %1$s</string>
