@@ -1,6 +1,5 @@
 package com.picmorrow.feature.settings.presentation.screen
 
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
@@ -19,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.picmorrow.MainActivity
 import com.picmorrow.R
+import com.picmorrow.core.common.areNotificationsAllowed
 import com.picmorrow.feature.settings.data.local.ThemePreferencesDataSource
 import com.picmorrow.feature.settings.data.repository.ThemePreferenceRepositoryImpl
 import com.picmorrow.feature.settings.domain.usecase.ObserveThemeModeUseCase
@@ -39,10 +39,10 @@ internal fun SettingsRoute(onBackClick: () -> Unit) {
     }
     val viewModel: ThemeSettingsViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var notificationsAllowed by remember { mutableStateOf(applicationContext.notificationsAllowed()) }
+    var notificationsAllowed by remember { mutableStateOf(applicationContext.areNotificationsAllowed()) }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        notificationsAllowed = applicationContext.notificationsAllowed()
+        notificationsAllowed = applicationContext.areNotificationsAllowed()
     }
 
     SettingsScreen(
@@ -54,9 +54,6 @@ internal fun SettingsRoute(onBackClick: () -> Unit) {
         onAddCameraShortcutClick = { applicationContext.requestCameraShortcut() },
     )
 }
-
-private fun Context.notificationsAllowed(): Boolean =
-    getSystemService(NotificationManager::class.java).areNotificationsEnabled()
 
 private fun Context.openNotificationSettings() {
     startActivity(
