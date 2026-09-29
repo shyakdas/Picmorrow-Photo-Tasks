@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -305,7 +306,7 @@ private fun HomeCameraFab(
         shape = RoundedCornerShape(FAB_CORNER_RADIUS),
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_fab_aperture),
+            imageVector = Icons.Filled.CameraAlt,
             contentDescription = stringResource(R.string.active_camera_content_description),
             modifier = Modifier.size(FAB_ICON_SIZE),
         )
