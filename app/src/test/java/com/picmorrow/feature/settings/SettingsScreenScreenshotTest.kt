@@ -38,6 +38,7 @@ class SettingsScreenScreenshotTest {
                 SettingsScreen(
                     uiState = ThemeSettingsUiState(),
                     notificationsAllowed = true,
+                    isCameraShortcutPinned = true,
                     onBackClick = {},
                     onThemeModeSelected = {},
                     onNotificationClick = {},
@@ -55,6 +56,7 @@ class SettingsScreenScreenshotTest {
                 SettingsScreen(
                     uiState = ThemeSettingsUiState(),
                     notificationsAllowed = true,
+                    isCameraShortcutPinned = true,
                     onBackClick = {},
                     onThemeModeSelected = {},
                     onNotificationClick = {},

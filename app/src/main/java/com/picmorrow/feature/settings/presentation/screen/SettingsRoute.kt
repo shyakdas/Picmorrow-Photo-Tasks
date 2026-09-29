@@ -40,14 +40,17 @@ internal fun SettingsRoute(onBackClick: () -> Unit) {
     val viewModel: ThemeSettingsViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var notificationsAllowed by remember { mutableStateOf(applicationContext.areNotificationsAllowed()) }
+    var isCameraShortcutPinned by remember { mutableStateOf(applicationContext.isCameraShortcutPinned()) }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         notificationsAllowed = applicationContext.areNotificationsAllowed()
+        isCameraShortcutPinned = applicationContext.isCameraShortcutPinned()
     }
 
     SettingsScreen(
         uiState = uiState,
         notificationsAllowed = notificationsAllowed,
+        isCameraShortcutPinned = isCameraShortcutPinned,
         onBackClick = onBackClick,
         onThemeModeSelected = viewModel::setThemeMode,
         onNotificationClick = { applicationContext.openNotificationSettings() },
@@ -65,7 +68,7 @@ private fun Context.openNotificationSettings() {
 
 private fun Context.requestCameraShortcut() {
     val shortcutManager = getSystemService(ShortcutManager::class.java)
-    if (!shortcutManager.isRequestPinShortcutSupported) return
+    if (!shortcutManager.isRequestPinShortcutSupported || isCameraShortcutPinned()) return
 
     val cameraIntent = Intent(this, MainActivity::class.java).apply {
         action = Intent.ACTION_VIEW
@@ -78,5 +81,10 @@ private fun Context.requestCameraShortcut() {
         .build()
     shortcutManager.requestPinShortcut(shortcut, null)
 }
+
+private fun Context.isCameraShortcutPinned(): Boolean =
+    getSystemService(ShortcutManager::class.java)
+        .pinnedShortcuts
+        .any { shortcut -> shortcut.id == CAMERA_SHORTCUT_ID }
 
 private const val CAMERA_SHORTCUT_ID = "picmorrow-camera"

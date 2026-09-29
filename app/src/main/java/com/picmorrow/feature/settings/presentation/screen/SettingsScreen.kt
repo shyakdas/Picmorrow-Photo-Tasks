@@ -69,6 +69,7 @@ import com.picmorrow.ui.theme.isPicmorrowDarkTheme
 internal fun SettingsScreen(
     uiState: ThemeSettingsUiState,
     notificationsAllowed: Boolean,
+    isCameraShortcutPinned: Boolean,
     onBackClick: () -> Unit,
     onThemeModeSelected: (AppThemeMode) -> Unit,
     onNotificationClick: () -> Unit,
@@ -123,6 +124,7 @@ internal fun SettingsScreen(
                 SettingsRow(
                     title = stringResource(R.string.settings_add_to_home_screen),
                     subtitle = stringResource(R.string.settings_camera_shortcut_body),
+                    showStatusDot = isCameraShortcutPinned,
                     colors = colors,
                     onClick = onAddCameraShortcutClick,
                 )
@@ -433,6 +435,7 @@ private fun SettingsScreenPreview() {
         SettingsScreen(
             uiState = ThemeSettingsUiState(),
             notificationsAllowed = true,
+            isCameraShortcutPinned = true,
             onBackClick = {},
             onThemeModeSelected = {},
             onNotificationClick = {},
