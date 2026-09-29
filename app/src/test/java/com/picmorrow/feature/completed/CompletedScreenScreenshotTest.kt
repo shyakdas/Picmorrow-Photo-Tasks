@@ -51,7 +51,13 @@ private fun CompletedSnapshotContent(darkTheme: Boolean, populated: Boolean = fa
                         completedTask(1, "Parking", "Car - B2, pillar C14", "2026-09-07T12:00:00Z"),
                         completedTask(2, "Buy", "Check this bulb size", "2026-09-06T12:00:00Z"),
                         completedTask(3, "Buy", "Find this coffee again", "2026-09-05T12:00:00Z"),
-                        completedTask(4, "Remember", "Router cable position", "2026-09-03T12:00:00Z"),
+                        completedTask(
+                            4,
+                            "Remember",
+                            "Router cable position",
+                            "2026-09-03T12:00:00Z",
+                            isSavedToGallery = true,
+                        ),
                     ),
                 )
             } else {
@@ -61,5 +67,19 @@ private fun CompletedSnapshotContent(darkTheme: Boolean, populated: Boolean = fa
     }
 }
 
-private fun completedTask(id: Long, category: String, title: String, iso: String): PhotoTask =
-    PhotoTask(id, "", category, title, "", null, Instant.parse(iso).toEpochMilli())
+private fun completedTask(
+    id: Long,
+    category: String,
+    title: String,
+    iso: String,
+    isSavedToGallery: Boolean = false,
+): PhotoTask = PhotoTask(
+    id = id,
+    photoPath = "",
+    category = category,
+    title = title,
+    notes = "",
+    reminderAtMillis = null,
+    completedAtMillis = Instant.parse(iso).toEpochMilli(),
+    isSavedToGallery = isSavedToGallery,
+)

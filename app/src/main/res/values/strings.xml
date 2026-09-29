@@ -13,6 +13,7 @@
     <string name="active_take_photo">Take photo</string>
     <string name="active_completed_tab">Completed</string>
     <string name="task_completed_on">Completed %1$s</string>
+    <string name="task_saved_to_gallery">Saved to gallery</string>
     <string name="completed_empty_title">Nothing completed yet</string>
     <string name="completed_empty_body">Tasks you finish will appear here.</string>
     <string name="active_settings_content_description">Settings</string>

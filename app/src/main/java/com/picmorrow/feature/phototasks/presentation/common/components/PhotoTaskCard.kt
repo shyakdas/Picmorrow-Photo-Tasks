@@ -7,14 +7,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -35,10 +33,14 @@ import androidx.compose.ui.unit.sp
 import com.picmorrow.R
 import com.picmorrow.core.common.AppDateFormat
 import com.picmorrow.core.common.formatDate
-import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
+import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskListColors
 import com.picmorrow.feature.phototasks.presentation.common.model.photoTaskListColors
+import com.picmorrow.ui.theme.Coral
+import com.picmorrow.ui.theme.DarkCoral
+import com.picmorrow.ui.theme.DarkEmptyIconBackground
+import com.picmorrow.ui.theme.LightEmptyIconBackground
 import com.picmorrow.ui.theme.PicmorrowTheme
 
 @Composable
@@ -117,26 +119,50 @@ private fun PhotoTaskCardDetails(
             overflow = TextOverflow.Ellipsis,
         )
         if (category != null || task.completedAtMillis != null) {
-            FlowRow(
-                modifier = Modifier.padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (category != null) CategoryBadge(category = category, darkTheme = darkTheme)
                 task.completedAtMillis?.let { completedAt ->
+                    if (category != null) Spacer(Modifier.width(6.dp))
                     Text(
                         text = stringResource(
                             R.string.task_completed_on,
                             formatDate(completedAt, AppDateFormat.DayMonth),
                         ),
                         color = colors.secondaryText,
-                        modifier = Modifier.padding(top = 4.dp),
-                        fontSize = 13.sp,
-                        lineHeight = 16.sp,
+                        modifier = Modifier.weight(1f),
+                        fontSize = 11.sp,
+                        lineHeight = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        softWrap = false,
                     )
                 }
             }
         }
+        if (task.isSavedToGallery) {
+            Spacer(Modifier.size(6.dp))
+            SavedToGalleryBadge(darkTheme)
+        }
+    }
+}
+
+@Composable
+private fun SavedToGalleryBadge(darkTheme: Boolean) {
+    Surface(
+        shape = RoundedCornerShape(6.dp),
+        color = if (darkTheme) DarkEmptyIconBackground else LightEmptyIconBackground,
+    ) {
+        Text(
+            text = stringResource(R.string.task_saved_to_gallery),
+            color = if (darkTheme) DarkCoral else Coral,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            fontSize = 12.sp,
+            lineHeight = 15.sp,
+            fontWeight = FontWeight.SemiBold,
+        )
     }
 }
 
