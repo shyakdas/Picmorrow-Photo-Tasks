@@ -10,6 +10,7 @@ import com.picmorrow.feature.phototasks.domain.reminder.TaskReminderScheduler
 import com.picmorrow.feature.phototasks.domain.usecase.SavePhotoTaskUseCase
 import com.picmorrow.feature.phototasks.presentation.NewPhotoTaskViewModel
 import com.picmorrow.R
+import com.picmorrow.feature.taskdetails.domain.TaskPhotoStorage
 import java.io.File
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -30,6 +31,7 @@ class PhotoTaskSaveIntegrationTest {
         try {
             val viewModel = NewPhotoTaskViewModel(
                 SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao(), NoOpReminderScheduler)),
+                NoOpTaskPhotoStorage,
             )
             val draft = PhotoTaskDraft(photo.absolutePath, "Parking", "  Find car  ", "  Level 2  ", 1234L)
 
@@ -56,6 +58,7 @@ class PhotoTaskSaveIntegrationTest {
         try {
             val viewModel = NewPhotoTaskViewModel(
                 SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao(), NoOpReminderScheduler)),
+                NoOpTaskPhotoStorage,
             )
             val draft = PhotoTaskDraft("/missing/photo.jpg", "Parking", "   ", "", null)
 
@@ -76,6 +79,7 @@ class PhotoTaskSaveIntegrationTest {
         try {
             val viewModel = NewPhotoTaskViewModel(
                 SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao(), NoOpReminderScheduler)),
+                NoOpTaskPhotoStorage,
             )
             val draft = PhotoTaskDraft("/missing/photo.jpg", "Parking", "Find car", "", null)
 
@@ -94,5 +98,11 @@ class PhotoTaskSaveIntegrationTest {
         override fun schedule(taskId: Long, reminderAtMillis: Long) = Unit
 
         override fun cancel(taskId: Long) = Unit
+    }
+
+    private object NoOpTaskPhotoStorage : TaskPhotoStorage {
+        override suspend fun saveToGallery(photoPath: String) = Unit
+
+        override suspend fun deleteLocalPhoto(photoPath: String) = Unit
     }
 }

@@ -5,17 +5,20 @@ import com.picmorrow.R
 import com.picmorrow.feature.phototasks.domain.model.PhotoTaskDraft
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskRepository
 import com.picmorrow.feature.phototasks.domain.usecase.SavePhotoTaskUseCase
+import com.picmorrow.feature.taskdetails.domain.TaskPhotoStorage
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withTimeout
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -120,13 +123,63 @@ class NewPhotoTaskViewModelTest {
     fun viewModelStartsUnsaved() {
         val useCase = SavePhotoTaskUseCase(RecordingRepository())
 
-        val viewModel = NewPhotoTaskViewModel(useCase)
+        val viewModel = NewPhotoTaskViewModel(useCase, RecordingPhotoStorage())
 
         assertFalse(viewModel.uiState.value.isSaved)
     }
 
-    private fun newViewModel(repository: PhotoTaskRepository) =
-        NewPhotoTaskViewModel(SavePhotoTaskUseCase(repository))
+    @Test
+    fun cancelDeletesCaptureBeforeRequestingExit() = runTest(dispatcher) {
+        val photoStorage = RecordingPhotoStorage()
+        val viewModel = newViewModel(RecordingRepository(), photoStorage)
+
+        viewModel.discardCapture("/private/capture.jpg", NewPhotoTaskExitAction.Cancel)
+        advanceUntilIdle()
+
+        assertEquals(listOf("/private/capture.jpg"), photoStorage.deletedPaths)
+        assertEquals(
+            NewPhotoTaskExitAction.Cancel,
+            withTimeout(1_000) { viewModel.exitActions.first() },
+        )
+    }
+
+    @Test
+    fun failedCaptureDeletionStillRequestsRetakeExit() = runTest(dispatcher) {
+        Mockito.mockStatic(Log::class.java).use {
+            val photoStorage = RecordingPhotoStorage().apply {
+                deleteFailure = IllegalStateException("Delete failed")
+            }
+            val viewModel = newViewModel(RecordingRepository(), photoStorage)
+
+            viewModel.discardCapture("/private/capture.jpg", NewPhotoTaskExitAction.Retake)
+            advanceUntilIdle()
+
+            assertEquals(
+                NewPhotoTaskExitAction.Retake,
+                withTimeout(1_000) { viewModel.exitActions.first() },
+            )
+        }
+    }
+
+    @Test
+    fun discardIsIgnoredWhileCaptureIsBeingSaved() = runTest(dispatcher) {
+        val repository = RecordingRepository()
+        val photoStorage = RecordingPhotoStorage()
+        val viewModel = newViewModel(repository, photoStorage)
+
+        viewModel.save(draft())
+        viewModel.discardCapture("/private/capture.jpg", NewPhotoTaskExitAction.Cancel)
+        runCurrent()
+
+        assertTrue(photoStorage.deletedPaths.isEmpty())
+        repository.allowSave.complete(Unit)
+        advanceUntilIdle()
+    }
+
+    private fun newViewModel(
+        repository: PhotoTaskRepository,
+        photoStorage: TaskPhotoStorage = RecordingPhotoStorage(),
+    ) = NewPhotoTaskViewModel(SavePhotoTaskUseCase(repository), photoStorage)
 
     private fun draft(): PhotoTaskDraft {
         val photo = File(temporaryFolder.root, "capture.jpg").apply { writeBytes(byteArrayOf(1)) }
@@ -145,6 +198,18 @@ class NewPhotoTaskViewModelTest {
             allowSave.await()
             savedDraft = draft
             return 42L
+        }
+    }
+
+    private class RecordingPhotoStorage : TaskPhotoStorage {
+        val deletedPaths = mutableListOf<String>()
+        var deleteFailure: Exception? = null
+
+        override suspend fun saveToGallery(photoPath: String) = Unit
+
+        override suspend fun deleteLocalPhoto(photoPath: String) {
+            deletedPaths += photoPath
+            deleteFailure?.let { throw it }
         }
     }
 }
