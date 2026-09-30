@@ -59,7 +59,7 @@ private fun CameraPermissionSnapshotContent(darkTheme: Boolean) {
     PicmorrowTheme(darkTheme = darkTheme) {
         CameraPermissionScreen(
             onCloseClick = {},
-            onRequestPermissionClick = {},
+            onActionClick = {},
         )
     }
 }

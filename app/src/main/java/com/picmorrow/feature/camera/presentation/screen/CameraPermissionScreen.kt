@@ -26,8 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview as ComposePreview
 @Composable
 internal fun CameraPermissionScreen(
     onCloseClick: () -> Unit,
-    onRequestPermissionClick: () -> Unit,
+    onActionClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showRationale: Boolean = false,
+    isPermanentlyDenied: Boolean = false,
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -47,7 +49,13 @@ internal fun CameraPermissionScreen(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = stringResource(R.string.camera_permission_title),
+                    text = stringResource(
+                        if (isPermanentlyDenied) {
+                            R.string.camera_permission_permanent_title
+                        } else {
+                            R.string.camera_permission_title
+                        },
+                    ),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
@@ -57,7 +65,13 @@ internal fun CameraPermissionScreen(
                 Spacer(modifier = Modifier.size(PERMISSION_BODY_TOP_SPACING))
 
                 Text(
-                    text = stringResource(R.string.camera_permission_body),
+                    text = stringResource(
+                        when {
+                            isPermanentlyDenied -> R.string.camera_permission_permanent_body
+                            showRationale -> R.string.camera_permission_rationale_body
+                            else -> R.string.camera_permission_body
+                        },
+                    ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
@@ -65,8 +79,16 @@ internal fun CameraPermissionScreen(
 
                 Spacer(modifier = Modifier.size(PERMISSION_ACTION_TOP_SPACING))
 
-                Button(onClick = onRequestPermissionClick) {
-                    Text(text = stringResource(R.string.camera_permission_action))
+                Button(onClick = onActionClick) {
+                    Text(
+                        text = stringResource(
+                            if (isPermanentlyDenied) {
+                                R.string.camera_permission_open_settings
+                            } else {
+                                R.string.camera_permission_action
+                            },
+                        ),
+                    )
                 }
             }
         }
@@ -80,7 +102,7 @@ private fun CameraPermissionScreenPreview() {
     PicmorrowTheme {
         CameraPermissionScreen(
             onCloseClick = {},
-            onRequestPermissionClick = {},
+            onActionClick = {},
         )
     }
 }

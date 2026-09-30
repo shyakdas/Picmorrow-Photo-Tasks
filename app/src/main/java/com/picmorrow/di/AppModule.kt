@@ -3,6 +3,7 @@ package com.picmorrow.di
 import com.picmorrow.MainViewModel
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.core.data.local.createAppDatabase
+import com.picmorrow.feature.camera.data.CameraPermissionRequestTracker
 import com.picmorrow.feature.camera.presentation.CameraViewModel
 import com.picmorrow.feature.home.presentation.HomeViewModel
 import com.picmorrow.feature.onboarding.presentation.WelcomeViewModel
@@ -40,6 +41,7 @@ import org.koin.dsl.module
 val appModule = module {
     single { createAppDatabase(androidContext()) }
     single { get<AppDatabase>().photoTaskDao() }
+    single { CameraPermissionRequestTracker(androidContext()) }
 
     single<TaskReminderScheduler> { AndroidTaskReminderScheduler(androidContext()) }
     single<TaskReminderNotificationPublisher> { AndroidTaskReminderNotifier(androidContext()) }

@@ -26,7 +26,11 @@
     <string name="camera_capture_content_description">Capture photo</string>
     <string name="camera_permission_title">Camera access is needed</string>
     <string name="camera_permission_body">Picmorrow uses the camera to make photo reminders.</string>
+    <string name="camera_permission_rationale_body">Camera access is needed to capture photos for your tasks. Picmorrow only uses it while the camera is open.</string>
     <string name="camera_permission_action">Allow camera access</string>
+    <string name="camera_permission_permanent_title">Camera access is turned off</string>
+    <string name="camera_permission_permanent_body">Allow camera access in Android settings to capture photo tasks.</string>
+    <string name="camera_permission_open_settings">Open settings</string>
     <string name="camera_photo_saved">Photo saved</string>
     <string name="camera_photo_failed">Could not save photo</string>
     <string name="camera_category_parking">Parking</string>

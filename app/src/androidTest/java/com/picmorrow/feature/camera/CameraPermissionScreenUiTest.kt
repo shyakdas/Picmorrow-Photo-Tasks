@@ -50,11 +50,11 @@ class CameraPermissionScreenUiTest {
     @Test
     fun cameraPermissionScreen_invokesActions() {
         var closeClickCount = 0
-        var requestPermissionClickCount = 0
+        var actionClickCount = 0
 
         setContent(
             onCloseClick = { closeClickCount++ },
-            onRequestPermissionClick = { requestPermissionClickCount++ },
+            onActionClick = { actionClickCount++ },
         )
 
         composeRule
@@ -63,18 +63,39 @@ class CameraPermissionScreenUiTest {
         composeRule.onNodeWithText(string(R.string.camera_permission_action)).performClick()
 
         assertEquals(1, closeClickCount)
-        assertEquals(1, requestPermissionClickCount)
+        assertEquals(1, actionClickCount)
+    }
+
+    @Test
+    fun cameraPermissionScreen_showsSettingsActionForPermanentDenial() {
+        setContent(isPermanentlyDenied = true)
+
+        composeRule.onNodeWithText(string(R.string.camera_permission_permanent_title)).assertIsDisplayed()
+        composeRule.onNodeWithText(string(R.string.camera_permission_permanent_body)).assertIsDisplayed()
+        composeRule.onNodeWithText(string(R.string.camera_permission_open_settings)).assertHasClickAction()
+    }
+
+    @Test
+    fun cameraPermissionScreen_showsRationaleAfterRecoverableDenial() {
+        setContent(showRationale = true)
+
+        composeRule.onNodeWithText(string(R.string.camera_permission_rationale_body)).assertIsDisplayed()
+        composeRule.onNodeWithText(string(R.string.camera_permission_action)).assertHasClickAction()
     }
 
     private fun setContent(
         onCloseClick: () -> Unit = {},
-        onRequestPermissionClick: () -> Unit = {},
+        onActionClick: () -> Unit = {},
+        showRationale: Boolean = false,
+        isPermanentlyDenied: Boolean = false,
     ) {
         composeRule.setContent {
             PicmorrowTheme {
                 CameraPermissionScreen(
                     onCloseClick = onCloseClick,
-                    onRequestPermissionClick = onRequestPermissionClick,
+                    onActionClick = onActionClick,
+                    showRationale = showRationale,
+                    isPermanentlyDenied = isPermanentlyDenied,
                 )
             }
         }
