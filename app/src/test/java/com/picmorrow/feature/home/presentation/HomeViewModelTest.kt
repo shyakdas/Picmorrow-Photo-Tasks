@@ -29,8 +29,8 @@ class HomeViewModelTest {
     @After fun tearDown() = Dispatchers.resetMain()
 
     @Test
-    fun factoryCreatesHomeViewModel() {
-        val viewModel = HomeViewModel.Factory(FakeListingRepository()).create(HomeViewModel::class.java)
+    fun viewModelStartsWithLoadingState() {
+        val viewModel = HomeViewModel(FakeListingRepository())
 
         assertTrue(viewModel.contentState.value.isLoading)
     }

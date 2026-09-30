@@ -6,7 +6,7 @@ internal fun interface TaskReminderNotificationPublisher {
     fun show(taskId: Long, taskTitle: String)
 }
 
-internal class TaskReminderDelivery(
+class TaskReminderDelivery internal constructor(
     private val dao: PhotoTaskDao,
     private val notificationPublisher: TaskReminderNotificationPublisher,
 ) {

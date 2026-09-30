@@ -20,16 +20,11 @@ import com.picmorrow.feature.phototasks.data.local.PhotoTaskEntity
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun photoTaskDao(): PhotoTaskDao
-
-    companion object {
-        private var instance: AppDatabase? = null
-
-        @Synchronized
-        fun getInstance(context: Context): AppDatabase =
-            instance ?: Room.databaseBuilder(
-                context.applicationContext,
-                AppDatabase::class.java,
-                "picmorrow.db",
-            ).build().also { instance = it }
-    }
 }
+
+fun createAppDatabase(context: Context): AppDatabase =
+    Room.databaseBuilder(
+        context.applicationContext,
+        AppDatabase::class.java,
+        "picmorrow.db",
+    ).build()

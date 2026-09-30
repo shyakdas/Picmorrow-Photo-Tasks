@@ -15,33 +15,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.picmorrow.MainActivity
 import com.picmorrow.R
 import com.picmorrow.core.common.areNotificationsAllowed
-import com.picmorrow.feature.settings.data.local.ThemePreferencesDataSource
-import com.picmorrow.feature.settings.data.repository.ThemePreferenceRepositoryImpl
-import com.picmorrow.feature.settings.domain.usecase.ObserveThemeModeUseCase
-import com.picmorrow.feature.settings.domain.usecase.SetThemeModeUseCase
 import com.picmorrow.feature.settings.presentation.ThemeSettingsViewModel
 import com.picmorrow.navigation.AppDestination
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SettingsRoute(
     onBackClick: () -> Unit,
     onAboutClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
+    viewModel: ThemeSettingsViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val applicationContext = context.applicationContext
-    val factory = remember(applicationContext) {
-        val repository = ThemePreferenceRepositoryImpl(ThemePreferencesDataSource(applicationContext))
-        ThemeSettingsViewModel.Factory(
-            ObserveThemeModeUseCase(repository),
-            SetThemeModeUseCase(repository),
-        )
-    }
-    val viewModel: ThemeSettingsViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var notificationsAllowed by remember { mutableStateOf(applicationContext.areNotificationsAllowed()) }
     var isCameraShortcutPinned by remember { mutableStateOf(applicationContext.isCameraShortcutPinned()) }

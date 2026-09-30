@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.picmorrow.R
 import com.picmorrow.feature.onboarding.presentation.WelcomeViewModel
 import com.picmorrow.feature.onboarding.presentation.components.WelcomeActions
@@ -21,6 +20,7 @@ import com.picmorrow.feature.onboarding.presentation.components.WelcomeHero
 import com.picmorrow.feature.onboarding.presentation.model.WelcomeUiState
 import com.picmorrow.ui.theme.PicmorrowTheme
 import com.picmorrow.ui.theme.isPicmorrowDarkTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WelcomeRoute(
@@ -28,7 +28,7 @@ fun WelcomeRoute(
     onExploreFirstClick: () -> Unit,
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isPicmorrowDarkTheme(),
-    viewModel: WelcomeViewModel = viewModel(),
+    viewModel: WelcomeViewModel = koinViewModel(),
 ) {
     WelcomeScreen(
         uiState = viewModel.uiState(darkTheme),

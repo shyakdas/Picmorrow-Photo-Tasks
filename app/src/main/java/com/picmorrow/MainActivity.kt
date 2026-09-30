@@ -4,49 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.picmorrow.core.data.local.AppDatabase
-import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
-import com.picmorrow.feature.phototasks.data.reminder.AndroidTaskReminderScheduler
-import com.picmorrow.feature.phototasks.domain.usecase.HasPhotoTasksUseCase
-import com.picmorrow.feature.settings.data.local.ThemePreferencesDataSource
-import com.picmorrow.feature.settings.data.repository.ThemePreferenceRepositoryImpl
 import com.picmorrow.feature.settings.domain.model.AppThemeMode
-import com.picmorrow.feature.settings.domain.usecase.ObserveThemeModeUseCase
-import com.picmorrow.feature.settings.domain.usecase.SetThemeModeUseCase
 import com.picmorrow.feature.settings.presentation.ThemeSettingsViewModel
 import com.picmorrow.navigation.AppDestination
 import com.picmorrow.navigation.PicmorrowNavHost
 import com.picmorrow.ui.theme.PicmorrowTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels {
-        val dao = AppDatabase.getInstance(applicationContext).photoTaskDao()
-        viewModelFactory {
-            initializer {
-                MainViewModel(
-                    HasPhotoTasksUseCase(
-                        PhotoTaskRepositoryImpl(dao, AndroidTaskReminderScheduler(applicationContext)),
-                    ),
-                )
-            }
-        }
-    }
-    private val themeViewModel: ThemeSettingsViewModel by viewModels {
-        val repository = ThemePreferenceRepositoryImpl(ThemePreferencesDataSource(applicationContext))
-        ThemeSettingsViewModel.Factory(
-            ObserveThemeModeUseCase(repository),
-            SetThemeModeUseCase(repository),
-        )
-    }
+    private val viewModel: MainViewModel by viewModel()
+    private val themeViewModel: ThemeSettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()

@@ -117,10 +117,10 @@ class NewPhotoTaskViewModelTest {
     }
 
     @Test
-    fun factoryCreatesViewModel() {
+    fun viewModelStartsUnsaved() {
         val useCase = SavePhotoTaskUseCase(RecordingRepository())
 
-        val viewModel = NewPhotoTaskViewModel.Factory(useCase).create(NewPhotoTaskViewModel::class.java)
+        val viewModel = NewPhotoTaskViewModel(useCase)
 
         assertFalse(viewModel.uiState.value.isSaved)
     }
