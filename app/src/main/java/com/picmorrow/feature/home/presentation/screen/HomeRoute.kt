@@ -18,6 +18,7 @@ import com.picmorrow.core.common.hasNotificationPermission
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.home.presentation.HomeViewModel
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
+import com.picmorrow.feature.phototasks.data.reminder.AndroidTaskReminderScheduler
 
 @Composable
 internal fun HomeRoute(
@@ -28,7 +29,12 @@ internal fun HomeRoute(
     val context = LocalContext.current
     val applicationContext = context.applicationContext
     val factory = remember(applicationContext) {
-        HomeViewModel.Factory(PhotoTaskRepositoryImpl(AppDatabase.getInstance(applicationContext).photoTaskDao()))
+        HomeViewModel.Factory(
+            PhotoTaskRepositoryImpl(
+                AppDatabase.getInstance(applicationContext).photoTaskDao(),
+                AndroidTaskReminderScheduler(applicationContext),
+            ),
+        )
     }
     val viewModel: HomeViewModel = viewModel(factory = factory)
     val contentState by viewModel.contentState.collectAsStateWithLifecycle()

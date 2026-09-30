@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
+import com.picmorrow.feature.phototasks.data.reminder.AndroidTaskReminderScheduler
 import com.picmorrow.feature.phototasks.domain.usecase.HasPhotoTasksUseCase
 import com.picmorrow.feature.settings.data.local.ThemePreferencesDataSource
 import com.picmorrow.feature.settings.data.repository.ThemePreferenceRepositoryImpl
@@ -31,7 +32,11 @@ class MainActivity : ComponentActivity() {
         val dao = AppDatabase.getInstance(applicationContext).photoTaskDao()
         viewModelFactory {
             initializer {
-                MainViewModel(HasPhotoTasksUseCase(PhotoTaskRepositoryImpl(dao)))
+                MainViewModel(
+                    HasPhotoTasksUseCase(
+                        PhotoTaskRepositoryImpl(dao, AndroidTaskReminderScheduler(applicationContext)),
+                    ),
+                )
             }
         }
     }
