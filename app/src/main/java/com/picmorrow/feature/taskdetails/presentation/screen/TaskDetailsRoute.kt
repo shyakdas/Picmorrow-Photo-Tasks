@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
+import com.picmorrow.feature.phototasks.data.reminder.AndroidTaskReminderScheduler
 import com.picmorrow.feature.taskdetails.data.AndroidTaskPhotoStorage
 import com.picmorrow.feature.taskdetails.presentation.TaskDetailsViewModel
 import com.picmorrow.feature.taskdetails.presentation.model.TaskDetailsUiState
@@ -22,7 +23,10 @@ internal fun TaskDetailsRoute(
 ) {
     val context = LocalContext.current.applicationContext
     val factory = remember(context, taskId) {
-        val repository = PhotoTaskRepositoryImpl(AppDatabase.getInstance(context).photoTaskDao())
+        val repository = PhotoTaskRepositoryImpl(
+            AppDatabase.getInstance(context).photoTaskDao(),
+            AndroidTaskReminderScheduler(context),
+        )
         viewModelFactory {
             initializer { TaskDetailsViewModel(taskId, repository, AndroidTaskPhotoStorage(context)) }
         }

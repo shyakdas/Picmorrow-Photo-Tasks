@@ -8,16 +8,20 @@ import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskRepository
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskListingRepository
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskStatusRepository
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskDetailsRepository
+import com.picmorrow.feature.phototasks.domain.reminder.TaskReminderScheduler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
+class PhotoTaskRepositoryImpl(
+    private val dao: PhotoTaskDao,
+    private val reminderScheduler: TaskReminderScheduler,
+) :
     PhotoTaskRepository,
     PhotoTaskListingRepository,
     PhotoTaskStatusRepository,
     PhotoTaskDetailsRepository {
-    override suspend fun savePhotoTask(draft: PhotoTaskDraft): Long =
-        dao.insert(
+    override suspend fun savePhotoTask(draft: PhotoTaskDraft): Long {
+        val taskId = dao.insert(
             PhotoTaskEntity(
                 photoPath = draft.photoPath,
                 category = draft.category,
@@ -27,6 +31,9 @@ class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
                 capturedAtMillis = draft.capturedAtMillis,
             ),
         )
+        draft.reminderAtMillis?.let { reminderScheduler.schedule(taskId, it) }
+        return taskId
+    }
 
     override fun observeActive(): Flow<List<PhotoTask>> =
         dao.observeActive().map { tasks -> tasks.map { it.toDomain() } }
@@ -35,15 +42,15 @@ class PhotoTaskRepositoryImpl(private val dao: PhotoTaskDao) :
         dao.observeCompleted().map { tasks -> tasks.map { it.toDomain() } }
 
     override suspend fun complete(id: Long, completedAtMillis: Long) {
-        dao.complete(id, completedAtMillis)
+        if (dao.complete(id, completedAtMillis) > 0) reminderScheduler.cancel(id)
     }
 
     override suspend fun complete(id: Long, completedAtMillis: Long, isSavedToGallery: Boolean) {
-        dao.complete(id, completedAtMillis, isSavedToGallery)
+        if (dao.complete(id, completedAtMillis, isSavedToGallery) > 0) reminderScheduler.cancel(id)
     }
 
     override suspend fun delete(id: Long) {
-        dao.delete(id)
+        if (dao.delete(id) > 0) reminderScheduler.cancel(id)
     }
 
     override suspend fun hasPhotoTasks(): Boolean = dao.hasTasks()

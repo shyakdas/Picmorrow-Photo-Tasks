@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
+import com.picmorrow.feature.phototasks.data.reminder.AndroidTaskReminderScheduler
 import com.picmorrow.feature.phototasks.domain.usecase.SavePhotoTaskUseCase
 import com.picmorrow.feature.phototasks.presentation.NewPhotoTaskViewModel
 
@@ -24,7 +25,9 @@ internal fun NewPhotoTaskRoute(
     val context = LocalContext.current.applicationContext
     val factory = remember(context) {
         val dao = AppDatabase.getInstance(context).photoTaskDao()
-        NewPhotoTaskViewModel.Factory(SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(dao)))
+        NewPhotoTaskViewModel.Factory(
+            SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(dao, AndroidTaskReminderScheduler(context))),
+        )
     }
     val viewModel: NewPhotoTaskViewModel = viewModel(factory = factory)
     val saveState by viewModel.uiState.collectAsStateWithLifecycle()
