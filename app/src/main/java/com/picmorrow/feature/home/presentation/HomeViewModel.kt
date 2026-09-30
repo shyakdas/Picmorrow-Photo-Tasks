@@ -1,7 +1,6 @@
 package com.picmorrow.feature.home.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.picmorrow.feature.phototasks.domain.repository.PhotoTaskListingRepository
 import com.picmorrow.feature.home.presentation.model.HomeContentState
@@ -21,11 +20,6 @@ internal class HomeViewModel(private val repository: PhotoTaskListingRepository)
 
     fun complete(id: Long) {
         viewModelScope.launch { repository.complete(id, System.currentTimeMillis()) }
-    }
-
-    class Factory(private val repository: PhotoTaskListingRepository) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = HomeViewModel(repository) as T
     }
 
     private companion object {

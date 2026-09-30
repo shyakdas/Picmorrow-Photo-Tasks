@@ -3,11 +3,11 @@ package com.picmorrow.feature.phototasks.data.reminder
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.picmorrow.core.data.local.AppDatabase
 
 class TaskReminderWorker(
     appContext: Context,
     workerParameters: WorkerParameters,
+    private val reminderDelivery: TaskReminderDelivery,
 ) : CoroutineWorker(appContext, workerParameters) {
     override suspend fun doWork(): Result {
         val taskId = inputData.getLong(TaskIdKey, MissingValue)
@@ -15,10 +15,7 @@ class TaskReminderWorker(
         return if (taskId == MissingValue || scheduledReminderAt == MissingValue) {
             Result.failure()
         } else {
-            TaskReminderDelivery(
-                AppDatabase.getInstance(applicationContext).photoTaskDao(),
-                AndroidTaskReminderNotifier(applicationContext),
-            ).deliver(taskId, scheduledReminderAt)
+            reminderDelivery.deliver(taskId, scheduledReminderAt)
             Result.success()
         }
     }

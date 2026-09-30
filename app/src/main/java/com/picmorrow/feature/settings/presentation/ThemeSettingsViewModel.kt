@@ -1,7 +1,6 @@
 package com.picmorrow.feature.settings.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.picmorrow.feature.settings.domain.model.AppThemeMode
 import com.picmorrow.feature.settings.domain.usecase.ObserveThemeModeUseCase
@@ -29,18 +28,6 @@ class ThemeSettingsViewModel(
         viewModelScope.launch {
             setThemeModeUseCase(themeMode)
         }
-    }
-
-    class Factory(
-        private val observeThemeModeUseCase: ObserveThemeModeUseCase,
-        private val setThemeModeUseCase: SetThemeModeUseCase,
-    ) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            ThemeSettingsViewModel(
-                observeThemeModeUseCase = observeThemeModeUseCase,
-                setThemeModeUseCase = setThemeModeUseCase,
-            ) as T
     }
 
     private companion object {

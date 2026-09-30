@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.picmorrow.core.data.local.AppDatabase
 import com.picmorrow.feature.phototasks.data.repository.PhotoTaskRepositoryImpl
 import com.picmorrow.feature.phototasks.domain.model.PhotoTaskDraft
+import com.picmorrow.feature.phototasks.domain.reminder.TaskReminderScheduler
 import com.picmorrow.feature.phototasks.domain.usecase.SavePhotoTaskUseCase
 import com.picmorrow.feature.phototasks.presentation.NewPhotoTaskViewModel
 import com.picmorrow.R
@@ -28,7 +29,7 @@ class PhotoTaskSaveIntegrationTest {
 
         try {
             val viewModel = NewPhotoTaskViewModel(
-                SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao())),
+                SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao(), NoOpReminderScheduler)),
             )
             val draft = PhotoTaskDraft(photo.absolutePath, "Parking", "  Find car  ", "  Level 2  ", 1234L)
 
@@ -54,7 +55,7 @@ class PhotoTaskSaveIntegrationTest {
 
         try {
             val viewModel = NewPhotoTaskViewModel(
-                SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao())),
+                SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao(), NoOpReminderScheduler)),
             )
             val draft = PhotoTaskDraft("/missing/photo.jpg", "Parking", "   ", "", null)
 
@@ -74,7 +75,7 @@ class PhotoTaskSaveIntegrationTest {
 
         try {
             val viewModel = NewPhotoTaskViewModel(
-                SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao())),
+                SavePhotoTaskUseCase(PhotoTaskRepositoryImpl(database.photoTaskDao(), NoOpReminderScheduler)),
             )
             val draft = PhotoTaskDraft("/missing/photo.jpg", "Parking", "Find car", "", null)
 
@@ -87,5 +88,11 @@ class PhotoTaskSaveIntegrationTest {
         } finally {
             database.close()
         }
+    }
+
+    private object NoOpReminderScheduler : TaskReminderScheduler {
+        override fun schedule(taskId: Long, reminderAtMillis: Long) = Unit
+
+        override fun cancel(taskId: Long) = Unit
     }
 }

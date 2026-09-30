@@ -30,20 +30,20 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.picmorrow.feature.camera.presentation.CameraViewModel
 import com.picmorrow.feature.camera.presentation.components.CameraBackground
 import com.picmorrow.feature.camera.presentation.components.CameraContent
 import com.picmorrow.feature.camera.presentation.components.CameraTopBar
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import java.io.File
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun CameraScreen(
     onCloseClick: () -> Unit,
     onPhotoCaptured: (Uri, PhotoTaskCategory) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CameraViewModel = viewModel(),
+    viewModel: CameraViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

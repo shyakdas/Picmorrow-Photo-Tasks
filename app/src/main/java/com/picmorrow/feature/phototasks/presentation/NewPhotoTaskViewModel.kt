@@ -2,7 +2,6 @@ package com.picmorrow.feature.phototasks.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.picmorrow.R
 import com.picmorrow.feature.phototasks.domain.model.PhotoTaskDraft
@@ -45,12 +44,6 @@ internal class NewPhotoTaskViewModel(
 
     fun clearError() {
         _uiState.update { it.copy(errorMessageRes = null) }
-    }
-
-    class Factory(private val savePhotoTask: SavePhotoTaskUseCase) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            NewPhotoTaskViewModel(savePhotoTask) as T
     }
 
     private companion object {

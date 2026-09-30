@@ -9,7 +9,7 @@ import org.mockito.Mockito
 
 class AppDatabaseTest {
     @Test
-    fun getInstanceBuildsOneDatabaseWithApplicationContext() {
+    fun createAppDatabaseUsesApplicationContext() {
         val context = Mockito.mock(Context::class.java)
         val applicationContext = Mockito.mock(Context::class.java)
         val database = Mockito.mock(AppDatabase::class.java, Mockito.withSettings().useConstructor())
@@ -23,8 +23,7 @@ class AppDatabaseTest {
                 Room.databaseBuilder(applicationContext, AppDatabase::class.java, "picmorrow.db")
             }.thenReturn(builder)
 
-            assertSame(database, AppDatabase.getInstance(context))
-            assertSame(database, AppDatabase.getInstance(context))
+            assertSame(database, createAppDatabase(context))
             room.verify {
                 Room.databaseBuilder(applicationContext, AppDatabase::class.java, "picmorrow.db")
             }
