@@ -3,6 +3,7 @@ package com.picmorrow.feature.taskdetails.data
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
@@ -62,6 +63,63 @@ class AndroidTaskPhotoStorageTest {
         )
         assertEquals(0, publishedValues.value.getAsInteger(MediaStore.Images.Media.IS_PENDING))
         Mockito.verify(resolver, Mockito.never()).delete(imageUri, null, null)
+    }
+
+    @Test
+    fun saveToGalleryReusesExistingPublishedCopy() = runTest {
+        val photo = temporaryFolder.newFile("photo.jpg")
+        val resolver = Mockito.mock(ContentResolver::class.java)
+        val cursor = Mockito.mock(Cursor::class.java)
+        val storage = storage(resolver)
+        Mockito.`when`(cursor.moveToFirst()).thenReturn(true)
+        Mockito.`when`(
+            resolver.query(
+                Mockito.any(Uri::class.java),
+                Mockito.any(Array<String>::class.java),
+                Mockito.anyString(),
+                Mockito.any(Array<String>::class.java),
+                Mockito.isNull(),
+            ),
+        ).thenReturn(cursor)
+
+        storage.saveToGallery(photo.path)
+
+        Mockito.verify(resolver, Mockito.never()).insert(
+            Mockito.any(Uri::class.java),
+            Mockito.any(ContentValues::class.java),
+        )
+        Mockito.verify(cursor).close()
+    }
+
+    @Test
+    fun pendingCopyDoesNotPreventGalleryRetry() = runTest {
+        val photo = temporaryFolder.newFile("photo.jpg")
+        val resolver = Mockito.mock(ContentResolver::class.java)
+        val cursor = Mockito.mock(Cursor::class.java)
+        val imageUri = Mockito.mock(Uri::class.java)
+        val storage = storage(resolver)
+        Mockito.`when`(cursor.moveToFirst()).thenReturn(false)
+        Mockito.`when`(
+            resolver.query(
+                Mockito.any(Uri::class.java),
+                Mockito.any(Array<String>::class.java),
+                Mockito.anyString(),
+                Mockito.any(Array<String>::class.java),
+                Mockito.isNull(),
+            ),
+        ).thenReturn(cursor)
+        Mockito.`when`(
+            resolver.insert(Mockito.any(Uri::class.java), Mockito.any(ContentValues::class.java)),
+        ).thenReturn(imageUri)
+        Mockito.`when`(resolver.openOutputStream(imageUri)).thenReturn(ByteArrayOutputStream())
+
+        storage.saveToGallery(photo.path)
+
+        Mockito.verify(resolver).insert(
+            Mockito.any(Uri::class.java),
+            Mockito.any(ContentValues::class.java),
+        )
+        Mockito.verify(cursor).close()
     }
 
     @Test

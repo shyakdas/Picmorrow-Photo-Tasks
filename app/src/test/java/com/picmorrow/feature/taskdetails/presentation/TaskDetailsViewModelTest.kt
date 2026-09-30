@@ -116,6 +116,28 @@ class TaskDetailsViewModelTest {
     }
 
     @Test
+    fun completionRetryReusesGalleryExportAfterDatabaseFailure() = runTest(dispatcher) {
+        val repository = FakeDetailsRepository(task(), failCompletion = true)
+        val storage = FakePhotoStorage()
+        val viewModel = viewModel(repository, storage)
+        advanceUntilIdle()
+
+        viewModel.saveToGalleryAndComplete()
+        advanceUntilIdle()
+
+        assertEquals(1, storage.galleryCopies)
+        assertNull((viewModel.uiState.value as TaskDetailsUiState.Content).task.completedAtMillis)
+
+        repository.failCompletion = false
+        viewModel.saveToGalleryAndComplete()
+        advanceUntilIdle()
+
+        assertEquals(2, storage.saveCalls)
+        assertEquals(1, storage.galleryCopies)
+        assertTrue((viewModel.uiState.value as TaskDetailsUiState.Content).task.isSavedToGallery)
+    }
+
+    @Test
     fun deleteRemovesTaskThenItsPrivatePhoto() = runTest(dispatcher) {
         val repository = FakeDetailsRepository(task())
         val storage = FakePhotoStorage()
@@ -268,7 +290,7 @@ class TaskDetailsViewModelTest {
 
     private class FakeDetailsRepository(
         private val task: PhotoTask?,
-        private val failCompletion: Boolean = false,
+        var failCompletion: Boolean = false,
         private val completionError: Throwable? = null,
         private val completionGate: CompletableDeferred<Unit>? = null,
         private val deleteError: Throwable? = null,
@@ -307,10 +329,15 @@ class TaskDetailsViewModelTest {
     ) : TaskPhotoStorage {
         var savedPath: String? = null
         var deletedPath: String? = null
+        var saveCalls = 0
+        var galleryCopies = 0
+        private val exportedPaths = mutableSetOf<String>()
 
         override suspend fun saveToGallery(photoPath: String) {
+            saveCalls++
             if (failSave) error("Gallery unavailable")
             savedPath = photoPath
+            if (exportedPaths.add(photoPath)) galleryCopies++
         }
 
         override suspend fun deleteLocalPhoto(photoPath: String) {
