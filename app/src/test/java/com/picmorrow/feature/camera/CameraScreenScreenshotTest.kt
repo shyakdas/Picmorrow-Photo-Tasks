@@ -21,9 +21,16 @@ import com.picmorrow.feature.camera.presentation.components.CameraBackground
 import com.picmorrow.feature.camera.presentation.components.CameraCaptureButton
 import com.picmorrow.feature.camera.presentation.components.CameraCategorySelector
 import com.picmorrow.feature.camera.presentation.components.CameraTopBar
+import com.picmorrow.feature.camera.presentation.components.CameraAdaptiveContent
+import com.picmorrow.feature.camera.presentation.model.CameraContentUiState
 import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCategory
 import com.picmorrow.feature.camera.presentation.screen.CameraPermissionScreen
+import com.picmorrow.ui.adaptive.AdaptiveLayoutInfo
+import com.picmorrow.ui.adaptive.AdaptiveWidthClass
+import com.picmorrow.ui.adaptive.ProvideAdaptiveLayoutInfo
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.android.resources.Density
+import com.android.resources.ScreenOrientation
 import org.junit.Rule
 import org.junit.Test
 
@@ -50,6 +57,63 @@ class CameraScreenScreenshotTest {
     fun camera_controls_dark() {
         paparazzi.snapshot {
             CameraControlsSnapshotContent()
+        }
+    }
+
+    @Test
+    fun camera_expanded_landscape() {
+        paparazzi.unsafeUpdateConfig(
+            DeviceConfig.PIXEL_5.copy(
+                screenWidth = 1_800,
+                screenHeight = 1_000,
+                density = Density.XHIGH,
+                orientation = ScreenOrientation.LANDSCAPE,
+            ),
+        )
+        paparazzi.snapshot {
+            AdaptiveCameraSnapshotContent(
+                AdaptiveLayoutInfo(AdaptiveWidthClass.Expanded, false, false, false),
+            )
+        }
+    }
+
+    @Test
+    fun camera_foldable_tabletop() {
+        paparazzi.unsafeUpdateConfig(
+            DeviceConfig.PIXEL_5.copy(
+                screenWidth = 1_400,
+                screenHeight = 1_800,
+                density = Density.XHIGH,
+                orientation = ScreenOrientation.PORTRAIT,
+            ),
+        )
+        paparazzi.snapshot {
+            AdaptiveCameraSnapshotContent(
+                AdaptiveLayoutInfo(AdaptiveWidthClass.Medium, false, true, false),
+            )
+        }
+    }
+}
+
+@Composable
+private fun AdaptiveCameraSnapshotContent(layoutInfo: AdaptiveLayoutInfo) {
+    ProvideAdaptiveLayoutInfo(layoutInfo) {
+        PicmorrowTheme(darkTheme = true) {
+            Box(Modifier.fillMaxSize().background(CameraBackground)) {
+                CameraAdaptiveContent(
+                    uiState = CameraContentUiState(),
+                    onCategorySelected = {},
+                    onCaptureClick = {},
+                    modifier = Modifier.fillMaxSize(),
+                    preview = { previewModifier ->
+                        Box(previewModifier.background(androidx.compose.ui.graphics.Color(0xFF4C4036)))
+                    },
+                )
+                CameraTopBar(
+                    onCloseClick = {},
+                    modifier = Modifier.align(Alignment.TopCenter),
+                )
+            }
         }
     }
 }

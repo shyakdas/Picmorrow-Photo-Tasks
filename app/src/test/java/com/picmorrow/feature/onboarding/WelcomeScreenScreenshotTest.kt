@@ -3,6 +3,8 @@ package com.picmorrow.feature.onboarding
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import androidx.compose.runtime.Composable
+import com.android.resources.Density
+import com.android.resources.ScreenOrientation
 import org.junit.Rule
 import org.junit.Test
 import com.picmorrow.R
@@ -11,6 +13,9 @@ import com.picmorrow.feature.onboarding.presentation.screen.WelcomeScreen
 import com.picmorrow.ui.theme.DarkSecondaryText
 import com.picmorrow.ui.theme.LightSecondaryText
 import com.picmorrow.ui.theme.PicmorrowTheme
+import com.picmorrow.ui.adaptive.AdaptiveLayoutInfo
+import com.picmorrow.ui.adaptive.AdaptiveWidthClass
+import com.picmorrow.ui.adaptive.ProvideAdaptiveLayoutInfo
 
 class WelcomeScreenScreenshotTest {
 
@@ -28,6 +33,25 @@ class WelcomeScreenScreenshotTest {
     fun welcome_dark() {
         paparazzi.snapshot {
             WelcomeSnapshotContent(darkTheme = true)
+        }
+    }
+
+    @Test
+    fun welcome_compact_landscape_split_screen() {
+        paparazzi.unsafeUpdateConfig(
+            DeviceConfig.PIXEL_5.copy(
+                screenWidth = 1_000,
+                screenHeight = 700,
+                density = Density.XHIGH,
+                orientation = ScreenOrientation.LANDSCAPE,
+            ),
+        )
+        paparazzi.snapshot {
+            ProvideAdaptiveLayoutInfo(
+                AdaptiveLayoutInfo(AdaptiveWidthClass.Compact, true, false, false),
+            ) {
+                WelcomeSnapshotContent(darkTheme = false)
+            }
         }
     }
 }

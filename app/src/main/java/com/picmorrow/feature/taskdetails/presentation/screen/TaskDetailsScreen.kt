@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -180,31 +181,35 @@ private fun TaskDetailsContent(
     val cardBackground = if (darkTheme) DarkSurfaceRaised else LightNavigationBar
     val border = if (darkTheme) DarkBorder else LightBorder
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding(),
-    ) {
-        TaskDetailsTopBar(
-            onBackClick = onBackClick,
-            showDeleteAction = !active,
-            deleteActionEnabled = !isCompleting,
-            onDeleteClick = onDeleteClick,
-        )
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         Column(
             modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
+                .widthIn(max = DETAILS_CONTENT_MAX_WIDTH)
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding(),
         ) {
-            CapturedPhotoImage(
-                photoPath = task.photoPath,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1.1f)
-                    .clip(RoundedCornerShape(16.dp)),
+            TaskDetailsTopBar(
+                onBackClick = onBackClick,
+                showDeleteAction = !active,
+                deleteActionEnabled = !isCompleting,
+                onDeleteClick = onDeleteClick,
             )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
+            ) {
+                CapturedPhotoImage(
+                    photoPath = task.photoPath,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .widthIn(max = DETAILS_IMAGE_MAX_WIDTH)
+                        .fillMaxWidth()
+                        .aspectRatio(1.1f)
+                        .clip(RoundedCornerShape(16.dp)),
+                )
             Spacer(Modifier.height(20.dp))
             PhotoTaskCategory.entries.firstOrNull { it.name == task.category }?.let {
                 CategoryBadge(category = it, darkTheme = darkTheme)
@@ -253,27 +258,33 @@ private fun TaskDetailsContent(
                     fontSize = 15.sp,
                 )
             }
-            Spacer(Modifier.height(24.dp))
-        }
-        if (active) {
-            Button(
-                onClick = onMarkDoneClick,
-                enabled = !isCompleting,
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-                    .fillMaxWidth()
-                    .height(48.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            ) {
-                Text(
-                    if (isCompleting) stringResource(R.string.task_details_completing)
-                    else stringResource(R.string.task_details_mark_done),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                )
+                Spacer(Modifier.height(24.dp))
             }
-            Spacer(Modifier.height(18.dp))
+            if (active) {
+                Button(
+                    onClick = onMarkDoneClick,
+                    enabled = !isCompleting,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(horizontal = 24.dp)
+                        .widthIn(max = DETAILS_IMAGE_MAX_WIDTH)
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(28.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                ) {
+                    Text(
+                        if (isCompleting) stringResource(R.string.task_details_completing)
+                        else stringResource(R.string.task_details_mark_done),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                Spacer(Modifier.height(18.dp))
+            }
         }
     }
 }
+
+private val DETAILS_CONTENT_MAX_WIDTH = 960.dp
+private val DETAILS_IMAGE_MAX_WIDTH = 640.dp

@@ -22,11 +22,12 @@ import com.picmorrow.ui.theme.PicmorrowTheme
 internal fun WelcomeHero(
     @DrawableRes heroRes: Int,
     modifier: Modifier = Modifier,
+    compact: Boolean = false,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = HERO_TOP_PADDING),
+            .padding(top = if (compact) 0.dp else HERO_TOP_PADDING),
         contentAlignment = Alignment.Center,
     ) {
         Image(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -80,27 +82,30 @@ internal fun SettingsScreen(
     val colors = settingsColors(darkTheme)
 
     Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding(),
-        ) {
-            SettingsTopBar(onBackClick)
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp),
+                    .widthIn(max = SETTINGS_CONTENT_MAX_WIDTH)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .statusBarsPadding()
+                    .navigationBarsPadding(),
             ) {
-                SettingsSectionLabel(R.string.settings_appearance, colors.secondaryText)
-                Spacer(Modifier.height(10.dp))
-                SettingsRow(
-                    title = stringResource(R.string.settings_theme),
-                    value = stringResource(uiState.selectedThemeMode.labelRes),
-                    colors = colors,
-                    onClick = { showThemeSheet = true },
-                )
+                SettingsTopBar(onBackClick)
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 20.dp),
+                ) {
+                    SettingsSectionLabel(R.string.settings_appearance, colors.secondaryText)
+                    Spacer(Modifier.height(10.dp))
+                    SettingsRow(
+                        title = stringResource(R.string.settings_theme),
+                        value = stringResource(uiState.selectedThemeMode.labelRes),
+                        colors = colors,
+                        onClick = { showThemeSheet = true },
+                    )
 
                 Spacer(Modifier.height(26.dp))
                 SettingsSectionLabel(R.string.settings_reminders, colors.secondaryText)
@@ -152,7 +157,8 @@ internal fun SettingsScreen(
                     colors = colors,
                     onClick = onPrivacyPolicyClick,
                 )
-                Spacer(Modifier.height(28.dp))
+                    Spacer(Modifier.height(28.dp))
+                }
             }
         }
     }
@@ -421,4 +427,5 @@ private fun SettingsScreenPreview() {
 private val AllowedGreen = Color(0xFF18AF7A)
 private val NoticeBorder = Color(0xFFF0B800)
 private val NoticeText = Color(0xFFC75A00)
+private val SETTINGS_CONTENT_MAX_WIDTH = 720.dp
 private val ThemeOptions = listOf(AppThemeMode.System, AppThemeMode.Dark, AppThemeMode.Light)

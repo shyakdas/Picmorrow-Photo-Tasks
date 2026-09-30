@@ -3,6 +3,7 @@
 package com.picmorrow.feature.phototasks.presentation.screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
@@ -22,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,20 +71,22 @@ internal fun NewPhotoTaskScreen(
         modifier = modifier.fillMaxSize(),
         color = colors.background,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .imePadding()
-                .padding(horizontal = SCREEN_HORIZONTAL_PADDING),
-        ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState()),
+                    .widthIn(max = FORM_CONTENT_MAX_WIDTH)
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .imePadding()
+                    .padding(horizontal = SCREEN_HORIZONTAL_PADDING),
             ) {
-                Spacer(modifier = Modifier.height(TOP_SPACING))
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    Spacer(modifier = Modifier.height(TOP_SPACING))
 
                 NewPhotoTaskTopBar(
                     colors = colors,
@@ -153,35 +158,36 @@ internal fun NewPhotoTaskScreen(
                     onClick = { showReminderSheet = true },
                 )
 
+                    Spacer(modifier = Modifier.height(BOTTOM_SPACING))
+                }
+
+                saveState.errorMessageRes?.let { messageRes ->
+                    Text(
+                        text = stringResource(messageRes),
+                        color = colors.limitReached,
+                        fontSize = SAVE_ERROR_TEXT_SIZE,
+                        modifier = Modifier.padding(bottom = SAVE_ERROR_BOTTOM_SPACING),
+                    )
+                }
+
+                SaveTaskButton(
+                    onSaveClick = {
+                        onSaveClick(
+                            PhotoTaskDraft(
+                                photoPath = photoPath,
+                                category = currentCategory.name,
+                                title = title,
+                                notes = notes,
+                                reminderAtMillis = reminderAtMillis,
+                            ),
+                        )
+                    },
+                    isSaving = saveState.isSaving,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
                 Spacer(modifier = Modifier.height(BOTTOM_SPACING))
             }
-
-            saveState.errorMessageRes?.let { messageRes ->
-                Text(
-                    text = stringResource(messageRes),
-                    color = colors.limitReached,
-                    fontSize = SAVE_ERROR_TEXT_SIZE,
-                    modifier = Modifier.padding(bottom = SAVE_ERROR_BOTTOM_SPACING),
-                )
-            }
-
-            SaveTaskButton(
-                onSaveClick = {
-                    onSaveClick(
-                        PhotoTaskDraft(
-                            photoPath = photoPath,
-                            category = currentCategory.name,
-                            title = title,
-                            notes = notes,
-                            reminderAtMillis = reminderAtMillis,
-                        ),
-                    )
-                },
-                isSaving = saveState.isSaving,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(BOTTOM_SPACING))
         }
     }
 
@@ -243,6 +249,7 @@ private fun NewPhotoTaskScreenDarkPreview() {
 }
 
 private val SCREEN_HORIZONTAL_PADDING = 20.dp
+private val FORM_CONTENT_MAX_WIDTH = 720.dp
 private val TOP_SPACING = 18.dp
 private val PHOTO_TOP_SPACING = 12.dp
 private val SECTION_TOP_SPACING = 22.dp

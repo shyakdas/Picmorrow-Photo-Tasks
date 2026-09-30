@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -54,23 +56,26 @@ internal fun AboutScreen(
     val uriHandler = LocalUriHandler.current
 
     Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding(),
-        ) {
-            SettingsDetailTopBar(
-                title = stringResource(R.string.about_title),
-                onBackClick = onBackClick,
-            )
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .widthIn(max = LEGAL_CONTENT_MAX_WIDTH)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .statusBarsPadding()
+                    .navigationBarsPadding(),
             ) {
+                SettingsDetailTopBar(
+                    title = stringResource(R.string.about_title),
+                    onBackClick = onBackClick,
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                 Spacer(Modifier.height(12.dp))
                 Surface(
                     modifier = Modifier.size(76.dp),
@@ -148,11 +153,14 @@ internal fun AboutScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp,
                 )
-                Spacer(Modifier.height(28.dp))
+                    Spacer(Modifier.height(28.dp))
+                }
             }
         }
     }
 }
+
+private val LEGAL_CONTENT_MAX_WIDTH = 720.dp
 
 @Composable
 private fun AboutLinkRow(

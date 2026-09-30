@@ -14,6 +14,7 @@ import com.picmorrow.feature.settings.domain.model.AppThemeMode
 import com.picmorrow.feature.settings.presentation.ThemeSettingsViewModel
 import com.picmorrow.navigation.AppDestination
 import com.picmorrow.navigation.PicmorrowNavHost
+import com.picmorrow.ui.adaptive.ProvideAdaptiveLayoutInfo
 import com.picmorrow.ui.theme.PicmorrowTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -42,15 +43,17 @@ class MainActivity : ComponentActivity() {
             }
             val shortcutDestination = intent.getStringExtra(EXTRA_START_DESTINATION)
             PicmorrowTheme(darkTheme = darkTheme) {
-                when (uiState) {
-                    MainUiState.Loading -> Unit
-                    MainUiState.Introduction ->
-                        PicmorrowNavHost(
-                            startDestination = shortcutDestination ?: AppDestination.Welcome.route,
+                ProvideAdaptiveLayoutInfo {
+                    when (uiState) {
+                        MainUiState.Loading -> Unit
+                        MainUiState.Introduction ->
+                            PicmorrowNavHost(
+                                startDestination = shortcutDestination ?: AppDestination.Welcome.route,
+                            )
+                        MainUiState.Home -> PicmorrowNavHost(
+                            startDestination = shortcutDestination ?: AppDestination.Home.route,
                         )
-                    MainUiState.Home -> PicmorrowNavHost(
-                        startDestination = shortcutDestination ?: AppDestination.Home.route,
-                    )
+                    }
                 }
             }
         }

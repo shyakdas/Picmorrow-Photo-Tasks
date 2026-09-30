@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
@@ -54,6 +56,7 @@ import com.picmorrow.feature.phototasks.presentation.common.model.PhotoTaskCateg
 import com.picmorrow.feature.phototasks.domain.model.PhotoTask
 import com.picmorrow.ui.theme.PicmorrowTheme
 import com.picmorrow.ui.theme.isPicmorrowDarkTheme
+import com.picmorrow.ui.adaptive.LocalAdaptiveLayoutInfo
 
 @Composable
 @Suppress("LongParameterList")
@@ -70,38 +73,56 @@ internal fun HomeScreen(
     var selectedTab by rememberSaveable { mutableStateOf(initialTab) }
     var selectedCategory by rememberSaveable { mutableStateOf<PhotoTaskCategory?>(null) }
     val colors = homeColors(darkTheme)
+    val useSideNavigation = LocalAdaptiveLayoutInfo.current.useWideLayout
 
     Surface(
         modifier = modifier.fillMaxSize(),
         color = colors.background,
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            HomeContent(
-                selectedTab = selectedTab,
-                colors = colors,
-                contentState = contentState,
-                selectedCategory = selectedCategory,
-                onCategorySelected = { selectedCategory = it },
-                darkTheme = darkTheme,
-                onCompleteClick = onCompleteClick,
-                onTaskClick = onTaskClick,
-                onTakePhotoClick = onTakePhotoClick,
-                onSettingsClick = onSettingsClick,
-            )
-
-            if (selectedTab == HomeTab.Active) {
-                HomeCameraFab(
-                    onTakePhotoClick = onTakePhotoClick,
-                    modifier = Modifier.align(Alignment.BottomEnd),
+        Row(modifier = Modifier.fillMaxSize()) {
+            if (useSideNavigation) {
+                HomeSideNavigation(
+                    selectedTab = selectedTab,
+                    colors = colors,
+                    onTabSelected = { selectedTab = it },
                 )
             }
 
-            HomeBottomBar(
-                selectedTab = selectedTab,
-                colors = colors,
-                onTabSelected = { selectedTab = it },
-                modifier = Modifier.align(Alignment.BottomCenter),
-            )
+            Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
+                HomeContent(
+                    selectedTab = selectedTab,
+                    colors = colors,
+                    contentState = contentState,
+                    selectedCategory = selectedCategory,
+                    onCategorySelected = { selectedCategory = it },
+                    darkTheme = darkTheme,
+                    onCompleteClick = onCompleteClick,
+                    onTaskClick = onTaskClick,
+                    onTakePhotoClick = onTakePhotoClick,
+                    onSettingsClick = onSettingsClick,
+                    showBottomBar = !useSideNavigation,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .widthIn(max = HOME_CONTENT_MAX_WIDTH),
+                )
+
+                if (selectedTab == HomeTab.Active) {
+                    HomeCameraFab(
+                        onTakePhotoClick = onTakePhotoClick,
+                        showBottomBar = !useSideNavigation,
+                        modifier = Modifier.align(Alignment.BottomEnd),
+                    )
+                }
+
+                if (!useSideNavigation) {
+                    HomeBottomBar(
+                        selectedTab = selectedTab,
+                        colors = colors,
+                        onTabSelected = { selectedTab = it },
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                    )
+                }
+            }
         }
     }
 }
@@ -119,9 +140,11 @@ private fun HomeContent(
     onTaskClick: (Long) -> Unit,
     onTakePhotoClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    showBottomBar: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .statusBarsPadding()
             .padding(horizontal = SCREEN_HORIZONTAL_PADDING),
@@ -143,7 +166,7 @@ private fun HomeContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(bottom = BOTTOM_BAR_HEIGHT),
+                .padding(bottom = if (showBottomBar) BOTTOM_BAR_HEIGHT else WIDE_CONTENT_BOTTOM_PADDING),
         ) {
             if (contentState.isLoading) return@Box
             when (selectedTab) {
@@ -289,6 +312,7 @@ private fun FilterChip(
 @Composable
 private fun HomeCameraFab(
     onTakePhotoClick: () -> Unit,
+    showBottomBar: Boolean,
     modifier: Modifier = Modifier,
 ) {
     FloatingActionButton(
@@ -297,7 +321,7 @@ private fun HomeCameraFab(
             .navigationBarsPadding()
             .padding(
                 end = FAB_END_PADDING,
-                bottom = BOTTOM_BAR_HEIGHT + FAB_BOTTOM_SPACING,
+                bottom = if (showBottomBar) BOTTOM_BAR_HEIGHT + FAB_BOTTOM_SPACING else FAB_BOTTOM_SPACING,
             )
             .size(FAB_SIZE),
         containerColor = MaterialTheme.colorScheme.primary,
@@ -309,6 +333,45 @@ private fun HomeCameraFab(
             contentDescription = stringResource(R.string.active_camera_content_description),
             modifier = Modifier.size(FAB_ICON_SIZE),
         )
+    }
+}
+
+@Composable
+private fun HomeSideNavigation(
+    selectedTab: HomeTab,
+    colors: HomeColors,
+    onTabSelected: (HomeTab) -> Unit,
+) {
+    Surface(
+        modifier = Modifier.fillMaxHeight().width(SIDE_NAVIGATION_WIDTH),
+        color = colors.bottomBarBackground,
+        border = BorderStroke(BOTTOM_BAR_BORDER_WIDTH, colors.bottomBarBorder),
+    ) {
+        Column(
+            modifier = Modifier.statusBarsPadding().navigationBarsPadding().padding(top = SIDE_NAVIGATION_TOP_PADDING),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            BottomBarItem(
+                item = HomeBottomBarItem(
+                    iconRes = R.drawable.ic_filter_grid,
+                    label = stringResource(R.string.active_title),
+                ),
+                selected = selectedTab == HomeTab.Active,
+                onClick = { onTabSelected(HomeTab.Active) },
+                colors = colors,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            BottomBarItem(
+                item = HomeBottomBarItem(
+                    iconRes = R.drawable.ic_bottom_check,
+                    label = stringResource(R.string.active_completed_tab),
+                ),
+                selected = selectedTab == HomeTab.Completed,
+                onClick = { onTabSelected(HomeTab.Completed) },
+                colors = colors,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
@@ -503,6 +566,10 @@ private val FAB_ICON_SIZE = 28.dp
 private val FAB_CORNER_RADIUS = 16.dp
 private val FAB_END_PADDING = 22.dp
 private val FAB_BOTTOM_SPACING = 20.dp
+private val HOME_CONTENT_MAX_WIDTH = 1_280.dp
+private val SIDE_NAVIGATION_WIDTH = 96.dp
+private val SIDE_NAVIGATION_TOP_PADDING = 72.dp
+private val WIDE_CONTENT_BOTTOM_PADDING = 16.dp
 private val SETTINGS_BUTTON_SIZE = 44.dp
 private val SETTINGS_ICON_SIZE = 24.dp
 private val SCREEN_TITLE_TEXT_SIZE = 28.sp
